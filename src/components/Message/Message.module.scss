@@ -7,9 +7,20 @@
   row-gap: 4px;
   background: #fff;
   margin-bottom: 12px;
-
-  &__user {
-    color: #2f9aff;
-    font-weight: 600;
+  &:hover {
+    box-shadow: 0px 3px 23px -8px rgba(34, 60, 80, 0.14);
+  }
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    .messageCard__header__user {
+      font-weight: 600;
+      &__human {
+        color: #7700ff;
+      }
+      &__robot {
+        color: #2f9aff;
+      }
+    }
   }
 }

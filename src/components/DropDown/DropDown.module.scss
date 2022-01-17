@@ -1,0 +1,10 @@
+.DropDown {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &__list {
+    position: absolute;
+    top: 28px;
+  }
+}
