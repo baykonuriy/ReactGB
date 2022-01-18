@@ -7,18 +7,37 @@ import axios from "axios";
 
 function App() {
 
-
-
 //-------messages
 
   const [messages, setMessages] = useState([])
-  
+  const [removedMessages, setRemovedMessages] = useState([])
+
+  const url = 'https://chat-messages-2-default-rtdb.firebaseio.com/chat.json'
+
   function createMessage(newMessage){
     setMessages([...messages, newMessage])
   }
 
+  async function filterServerMessages(url, removedMess){
+    let serverMessages = []
+    await axios.get(url)
+    .then(result=>{
+      serverMessages = [...result.data, ...messages, ...removedMess]
+      .filter(
+        (mes => currMess => !mes.has(currMess.id) && mes.add(currMess.id))(new Set))
+      .filter(item => item.user !== 'Robot')
+    })
+    axios.put(url, [...serverMessages])
+  }
+
+  useEffect(()=>{
+    if(messages.length > 0){
+      filterServerMessages(url, removedMessages)
+    }
+  }, [messages, removedMessages])
+
   async function loadMessages(){
-    const response = await axios.get('https://posts-for-chat-default-rtdb.firebaseio.com/chat.json')
+    const response = await axios.get('https://chat-messages-2-default-rtdb.firebaseio.com/chat.json')
     setMessages([...messages, ...response.data])
   }
 
@@ -31,9 +50,8 @@ function App() {
             {
               id: Date.now(),
               date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
-              text: `Ваше сообщение
-                «${messages[messages.length - 1].text}»
-                отправлено и скоро будет обработано оператором. Ждите`,
+              text: `Привет! Я робот. Я отвечаю на последнее ваше сообщение
+                «${messages[messages.length - 1].text}»`,
               user: 'Robot'
             }
           ])
@@ -42,12 +60,13 @@ function App() {
   }, [messages])
 
   function removeMessage(message){
-      const updateMessages = messages.filter(item=>{
-        return item.id !== message.id
-      })
-      setMessages([...updateMessages])
+    setRemovedMessages([...removedMessages, message])
+    const updateMessages = messages.filter(item=>{
+      return item.id !== message.id
+    })
+    setMessages([...updateMessages])
   }
-
+  
 //-------filter
 
 const [currFilters, setCurrFilters] = useState([])
@@ -67,13 +86,13 @@ const [filterValue, setFilterVAlue] = useState(
 )
 
 function addValueInCurrFilter(valFilt){
-    const updateFilter = currFilters.map(item=>{
-        if(item.id === valFilt.id){
-            return {...item, value: valFilt.value}
-        }
-        return item
-    })
-    setCurrFilters([...updateFilter])
+  const updateFilter = currFilters.map(item=>{
+      if(item.id === valFilt.id){
+          return {...item, value: valFilt.value}
+      }
+      return item
+  })
+  setCurrFilters([...updateFilter])
 }
 
 function addFilter(filter){
@@ -91,25 +110,48 @@ function clearFilters(){
     setCurrFilters([])
 }
 
+let [tempoFilter, setTempoFilter] = useState('')
+
 const filtredMessage = useMemo(()=>{
-  if(currFilters.length > 0){
+  if(currFilters.length > 1){
+    return messages.filter(item=>{
+      for(let i = 0; i < currFilters.length; i++){
+        switch(currFilters[i].name){
+          case 'Text': 
+            if(currFilters[i].value !== ''){
+              return item.text.toLowerCase().includes(currFilters[i].value)
+            } else{
+              return item.text.toLowerCase().includes(tempoFilter)
+            }
+          case 'User': 
+            if(currFilters[i].value !== ''){
+              return item.user.toLowerCase().includes(currFilters[i].value)
+            } else{
+              return item.text.toLowerCase().includes(tempoFilter)
+            }
+        }
+      }
+    })
+  }
+  if(currFilters.length === 1){
     return messages.filter(item=>{
       for(let i = 0; i < currFilters.length; i++){
         switch(currFilters[i].name){
           case 'Text': 
             if(item.text.toLowerCase().includes(currFilters[i].value)){
+              setTempoFilter(currFilters[i].value)
               return item
             }
-            break
           case 'User': 
             if(item.user.toLowerCase().includes(currFilters[i].value)){
+              setTempoFilter(currFilters[i].value)
               return item
             }
-            break
         }
       }
     })
-  } else{
+  }
+  if(currFilters.length === 0){
     return messages
   }
   

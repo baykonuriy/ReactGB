@@ -1,4 +1,4 @@
-import React, {Fragment, useRef, useEffect} from "react";
+import React, {Fragment, useRef, useEffect, useState} from "react";
 import moment from "moment";
 import { Message } from "../components/Message";
 // import { AppNavHeader } from "../components"
@@ -43,9 +43,13 @@ export const AppChat = (props) =>{
     }
 
     const messagePage = useRef()
+    const [countMessage, setCountMessage] = useState(0)
 
     useEffect(()=>{
-        messagePage.current.scrollTop = messagePage.current.scrollHeight - messagePage.current.clientHeight
+        if(countMessage < messages.length){
+            messagePage.current.scrollTop = messagePage.current.scrollHeight - messagePage.current.clientHeight
+            setCountMessage(messages.length)
+        }
     }, [messagePage, messages])
     
     return(
@@ -82,13 +86,13 @@ export const AppChat = (props) =>{
                             <div className="coldPage__text">
                                 <h2>Нет сообщений</h2>
                                 <p>
-                                    Напишите сообщение и нажмите отправить.<br/>
-                                    Или загрузите старые сообщения
+                                    Напишите сообщение и нажмите кнопку отправить.<br/>
+                                    Или восстановите удаленные сообщения
                                 </p>
                             </div>
                             <Button
                                 action={loadMessages}>
-                                <p>Загрузить</p>
+                                <p>Восстановить</p>
                             </Button>
                         </div>
                         :
