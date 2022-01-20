@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import styled from "./InputText.module.scss"
 import { FunctionButton } from "..";
 
@@ -10,7 +10,7 @@ export const InputText = (props) =>{
             children,
             iconTitle
         } = props
-
+    const inp = useRef()
     function sendValue(e){
         if(e.code === 'Enter'){
             action(value)
@@ -21,6 +21,8 @@ export const InputText = (props) =>{
     return(
         <div className={styled.InputText}>
             <input
+                autoFocus
+                ref={inp}
                 style={{paddingRight: "24px"}}
                 className={styled.InputText__inp}
                 onKeyDown={sendValue}
@@ -33,6 +35,7 @@ export const InputText = (props) =>{
                     action={()=>{
                         action(value)
                         setValue('')
+                        inp.current.focus()
                     }}
                     size="16px"
                     title={iconTitle}

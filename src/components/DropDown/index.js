@@ -21,32 +21,35 @@ export const DropDown = (
     const [viewListInChips, setViewListInChips] = useState(false)
 
     function openListInChips(){
-        setViewListInChips(true)
+        
         setTimeout(()=>{
+            setViewListInChips(true)
             document.addEventListener('click', closeListChips)
-        }, 200)
+        }, 30)
     }
 
     function closeListChips(){
-        setViewListInChips(false)
-        document.removeEventListener('click', closeListChips)
+        setTimeout(()=>{
+            setViewListInChips(false)
+            document.removeEventListener('click', closeListChips)
+        }, 20)
     }
 
+  
+
     useEffect(()=>{
-        openListInChips()
+        // openListInChips()
+        setViewListInChips(true)
+        document.addEventListener('click', closeListChips)
         return ()=>{
-            setTimeout(()=>{
-                document.removeEventListener('click', closeListChips)
-            })
+            document.removeEventListener('click', closeListChips)
         }
     }, [])
 
     if(type === 'icon'){
-
         function sendValueInIcon(val){
             action(val)
         }
-
 
         return(
             <div
@@ -97,7 +100,10 @@ export const DropDown = (
 
         return(
             <div
+
                 onClick={openListInChips}
+
+                tabIndex="1"
                 className=
                     {
                         styled.DropDown

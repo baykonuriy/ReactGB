@@ -52,7 +52,9 @@ function App() {
               date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
               text: `Привет! Я робот. Я отвечаю на последнее ваше сообщение
                 «${messages[messages.length - 1].text}»`,
-              user: 'Robot'
+              user: 'Robot',
+              role: 'recipient',
+              userpic:'https://findicons.com/files/icons/1291/quickpix_2005/128/marvin_the_paranoid_android.png'
             }
           ])
       }, 500)
@@ -66,7 +68,7 @@ function App() {
     })
     setMessages([...updateMessages])
   }
-  
+
 //-------filter
 
 const [currFilters, setCurrFilters] = useState([])
@@ -110,51 +112,28 @@ function clearFilters(){
     setCurrFilters([])
 }
 
-let [tempoFilter, setTempoFilter] = useState('')
+function recursiveFilter(filtArr, messArr){
+  let currMessArr = []
+  if(filtArr.length === 0){
+      return messArr
+  } else{
+      currMessArr = messArr.filter(mess=>{
+        return  mess[String(filtArr[0].name.toLocaleLowerCase())].toLocaleLowerCase().includes(filtArr[0].value.toLocaleLowerCase())
+      })
+     return recursiveFilter(filtArr.slice(1), currMessArr)
+  }
+} 
 
 const filtredMessage = useMemo(()=>{
-  if(currFilters.length > 1){
-    return messages.filter(item=>{
-      for(let i = 0; i < currFilters.length; i++){
-        switch(currFilters[i].name){
-          case 'Text': 
-            if(currFilters[i].value !== ''){
-              return item.text.toLowerCase().includes(currFilters[i].value)
-            } else{
-              return item.text.toLowerCase().includes(tempoFilter)
-            }
-          case 'User': 
-            if(currFilters[i].value !== ''){
-              return item.user.toLowerCase().includes(currFilters[i].value)
-            } else{
-              return item.text.toLowerCase().includes(tempoFilter)
-            }
-        }
-      }
-    })
-  }
-  if(currFilters.length === 1){
-    return messages.filter(item=>{
-      for(let i = 0; i < currFilters.length; i++){
-        switch(currFilters[i].name){
-          case 'Text': 
-            if(item.text.toLowerCase().includes(currFilters[i].value)){
-              setTempoFilter(currFilters[i].value)
-              return item
-            }
-          case 'User': 
-            if(item.user.toLowerCase().includes(currFilters[i].value)){
-              setTempoFilter(currFilters[i].value)
-              return item
-            }
-        }
-      }
-    })
-  }
+  
   if(currFilters.length === 0){
     return messages
   }
+  else{
+    return recursiveFilter(currFilters, messages)
+  }
   
+
 }, [currFilters, messages])
 
 function removeThisChips(filter){

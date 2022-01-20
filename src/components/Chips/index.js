@@ -14,7 +14,8 @@ export const Chips = (
 
     return(
         <div
-            className={styled.Chips}>
+            className={styled.Chips}
+            >
             <p className={styled.Chips__key}>
                 {value.name + ':'}
             </p>
