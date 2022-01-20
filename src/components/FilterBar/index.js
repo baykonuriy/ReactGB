@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import styled from './FilterBar.module.scss'
 import { DropDown, FunctionButton } from "..";
 
-
 export const FilterBar = (props) =>{
 
     const

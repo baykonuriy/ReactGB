@@ -3,6 +3,8 @@ import './App.scss';
 import { AppChat } from './pages/AppChat';
 import moment from 'moment'
 import axios from "axios";
+import { useFiltredMessage } from './hooks/useFiltredMessage';
+import { useColdPage } from './hooks/useColdPage';
 
 
 function App() {
@@ -72,6 +74,7 @@ function App() {
 //-------filter
 
 const [currFilters, setCurrFilters] = useState([])
+const filtredMessage = useFiltredMessage(currFilters, messages)
 const [filterValue, setFilterVAlue] = useState(
   [
       {
@@ -112,30 +115,6 @@ function clearFilters(){
     setCurrFilters([])
 }
 
-function recursiveFilter(filtArr, messArr){
-  let currMessArr = []
-  if(filtArr.length === 0){
-      return messArr
-  } else{
-      currMessArr = messArr.filter(mess=>{
-        return  mess[String(filtArr[0].name.toLocaleLowerCase())].toLocaleLowerCase().includes(filtArr[0].value.toLocaleLowerCase())
-      })
-     return recursiveFilter(filtArr.slice(1), currMessArr)
-  }
-} 
-
-const filtredMessage = useMemo(()=>{
-  
-  if(currFilters.length === 0){
-    return messages
-  }
-  else{
-    return recursiveFilter(currFilters, messages)
-  }
-  
-
-}, [currFilters, messages])
-
 function removeThisChips(filter){
   filter.value = ''
   setFilterVAlue([...filterValue, filter])
@@ -145,20 +124,7 @@ function removeThisChips(filter){
   setCurrFilters([...updateFilter])
 }
 
-//-------ColdPage
-
-const ColdPage = useMemo(()=>{
-  if
-  ( messages.length === 0 ||
-    messages.length === 0 && filtredMessage.length === 0)
-  { return 'NotMessages'}
-  if
-  ( messages.length > 0 && filtredMessage.length === 0)
-  {return 'NotFound'}
-  else
-  {return false}
-
-}, [filtredMessage, messages])
+const ColdPage = useColdPage(filtredMessage, messages)
 
   return (
     <div className="App">
