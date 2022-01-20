@@ -2,9 +2,10 @@ import React,{ useState, useEffect, useMemo } from 'react';
 import './App.scss';
 import { AppChat } from './pages/AppChat';
 import moment from 'moment'
-import axios from "axios";
 import { useFiltredMessage } from './hooks/useFiltredMessage';
 import { useColdPage } from './hooks/useColdPage';
+import { useFetchingMessages } from './hooks/useFetchingMessages';
+import MessageService from './API/MessageService';
 
 
 function App() {
@@ -13,35 +14,20 @@ function App() {
 
   const [messages, setMessages] = useState([])
   const [removedMessages, setRemovedMessages] = useState([])
-
-  const url = 'https://chat-messages-2-default-rtdb.firebaseio.com/chat.json'
-
-  function createMessage(newMessage){
-    setMessages([...messages, newMessage])
-  }
-
-  async function filterServerMessages(url, removedMess){
-    let serverMessages = []
-    await axios.get(url)
-    .then(result=>{
-      serverMessages = [...result.data, ...messages, ...removedMess]
-      .filter(
-        (mes => currMess => !mes.has(currMess.id) && mes.add(currMess.id))(new Set))
-      .filter(item => item.user !== 'Robot')
-    })
-    axios.put(url, [...serverMessages])
-  }
+  const [loadMessages, createMessage, loading, error] = useFetchingMessages(
+    async ()=> {
+    const response = await MessageService.getOldMessages()
+    setMessages([...messages, ...response])
+    },
+    newMessage =>{
+      setMessages([...messages, newMessage])
+  })
 
   useEffect(()=>{
     if(messages.length > 0){
-      filterServerMessages(url, removedMessages)
+      MessageService.filterServerMessages(messages, removedMessages)
     }
   }, [messages, removedMessages])
-
-  async function loadMessages(){
-    const response = await axios.get('https://chat-messages-2-default-rtdb.firebaseio.com/chat.json')
-    setMessages([...messages, ...response.data])
-  }
 
   useEffect(()=>{
     if(messages.length !== 0 && messages[messages.length - 1].user !== 'Robot'){
@@ -71,58 +57,16 @@ function App() {
     setMessages([...updateMessages])
   }
 
-//-------filter
-
-const [currFilters, setCurrFilters] = useState([])
-const filtredMessage = useFiltredMessage(currFilters, messages)
-const [filterValue, setFilterVAlue] = useState(
+const
   [
-      {
-          id: 'filter1',
-          name: 'Text',
-          value:''
-      },
-      {
-          id: 'filter2',
-          name: 'User',
-          value:''
-      }
-  ]
-)
-
-function addValueInCurrFilter(valFilt){
-  const updateFilter = currFilters.map(item=>{
-      if(item.id === valFilt.id){
-          return {...item, value: valFilt.value}
-      }
-      return item
-  })
-  setCurrFilters([...updateFilter])
-}
-
-function addFilter(filter){
-    setFilterVAlue(filterValue.filter(item=>{
-        return item.id !== filter.id
-    }))
-    setCurrFilters([...currFilters, filter])
-}
-
-function clearFilters(){
-    const updateFilter = currFilters.map(item=>{
-        return {...item, value: ''}
-    })
-    setFilterVAlue([...filterValue, ...updateFilter])
-    setCurrFilters([])
-}
-
-function removeThisChips(filter){
-  filter.value = ''
-  setFilterVAlue([...filterValue, filter])
-  const updateFilter = currFilters.filter(item=>{
-      return item.id !== filter.id
-  })
-  setCurrFilters([...updateFilter])
-}
+    currFilters,
+    filterValue,
+    addFilter,
+    addValueInCurrFilter,
+    clearFilters,
+    removeThisChips,
+    filtredMessage
+  ] = useFiltredMessage(messages)
 
 const ColdPage = useColdPage(filtredMessage, messages)
 
@@ -130,19 +74,17 @@ const ColdPage = useColdPage(filtredMessage, messages)
     <div className="App">
       <AppChat
         coldPage={ColdPage}
-        removeMessage={removeMessage}
+        removeMessage={(filter)=>removeMessage(filter)}
         removeChips={removeThisChips}
         filterValue={filterValue}
         currFilters={currFilters}
         loadMessages={loadMessages}
         clearFilters={clearFilters}
-        addFilter={addFilter}
-        addValueInCurrFilter={addValueInCurrFilter}
+        addFilter={(filter)=>addFilter(filter)}
+        addValueInCurrFilter={(valFilt)=>addValueInCurrFilter(valFilt)}
         create={createMessage}
         messages={filtredMessage}/>
-        
     </div>
-    
   );
 }
 
