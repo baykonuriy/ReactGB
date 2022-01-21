@@ -20,9 +20,14 @@ export const AppChat = (props) =>{
             addValueInCurrFilter,
             loadMessages,
             removeChips,
-            removeMessage
+            removeMessage,
+            loading
         } = props
     
+    useEffect(()=>{
+        console.log(loading)
+    },[loading])
+
     function sendMessage(e){
         create(
             {
@@ -80,6 +85,11 @@ export const AppChat = (props) =>{
                                         message={item}
                                         key={item.id}/>
                         })
+                        :
+                        loading === true?
+                        <div className="coldPage">
+                            <p>Loading...</p>
+                        </div>
                         :
                         coldPage === 'NotMessages'?
                         <div className="coldPage">

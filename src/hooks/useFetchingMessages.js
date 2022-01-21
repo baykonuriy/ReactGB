@@ -1,19 +1,21 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import MessageService from '../API/MessageService';
+import moment from 'moment'
 
-export const useFetchingMessages = 
-    (
-        getMessages,
-        addNewMessage
-    ) =>{
+export const useFetchingMessages = () =>{
+    const [messages, setMessages] = useState([])
+    const [removedMessages, setRemovedMessages] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
 
-    const fetching = async () =>{
+    const loadMessages = async () =>{
         try{
             setLoading(true)
-            await getMessages()
+            const response = await MessageService.getOldMessages()
+            setMessages([...messages, ...response])
         } catch(e){
             setError(true)
+            setLoading(false)
         } finally{
             setLoading(false)
         }
@@ -22,12 +24,49 @@ export const useFetchingMessages =
     const createMessage = newMessage =>{
         newMessage.role = 'sender'
         newMessage.userpic = 'https://ichef.bbci.co.uk/images/ic/256xn/p077b1km.jpg'
-        addNewMessage(newMessage)
+        setMessages([...messages, newMessage])
     }
 
-    const removeMessage = message => {
+    useEffect(()=>{
+        if(messages.length > 0){
+          MessageService.filterServerMessages(messages, removedMessages)
+        }
+      }, [messages, removedMessages])
+    
+      useEffect(()=>{
+        if(messages.length !== 0 && messages[messages.length - 1].user !== 'Robot'){
+          setTimeout(()=>{
+            setMessages(
+              [
+                ...messages,
+                {
+                  id: Date.now(),
+                  date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
+                  text: `Привет! Я робот. Я отвечаю на последнее ваше сообщение
+                    «${messages[messages.length - 1].text}»`,
+                  user: 'Robot',
+                  role: 'recipient',
+                  userpic:'https://findicons.com/files/icons/1291/quickpix_2005/128/marvin_the_paranoid_android.png'
+                }
+              ])
+          }, 500)
+        }
+      }, [messages])
+    
+      function removeMessage(message){
+        setRemovedMessages([...removedMessages, message])
+        const updateMessages = messages.filter(item=>{
+          return item.id !== message.id
+        })
+        setMessages([...updateMessages])
+      }
 
-    }
-
-   return[fetching, createMessage, loading, error]
+   return[
+        loadMessages,
+        createMessage,
+        removeMessage,
+        messages,
+        removedMessages,
+        loading,
+        error]
 }
