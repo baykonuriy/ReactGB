@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react"
 
 export const useFiltredMessage = (
-  // currFilters,
   messages
   ) =>{
   const [currFilters, setCurrFilters] = useState([])
