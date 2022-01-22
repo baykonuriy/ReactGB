@@ -1,0 +1,16 @@
+.FunctionButton {
+  opacity: 0.8;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+  &:disabled {
+    cursor: auto;
+    opacity: 0.25;
+    &:hover {
+      opacity: 0.25;
+    }
+  }
+}

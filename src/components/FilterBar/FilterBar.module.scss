@@ -1,0 +1,17 @@
+.FilterBar {
+  background: #fff;
+  border-bottom: 1px solid rgba(16, 24, 40, 0.1);
+  padding: 12px 96px;
+  display: flex;
+  &__Add {
+    height: 24px;
+    margin-right: 8px;
+    &__Plus {
+      margin-left: 8px;
+    }
+  }
+  &__Cleaning {
+    height: 24px;
+    margin-right: 8px;
+  }
+}

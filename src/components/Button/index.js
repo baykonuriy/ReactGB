@@ -1,10 +1,18 @@
-import React, {Fragment} from "react";
+import React from "react";
+import styled from "./Button.module.scss"
 
-export const Button = () => {
+export const Button = (
+    {
+        children,
+        action,
+        type
+    }) => {
 
     return(
-        <Fragment>
-            <p>button</p>
-        </Fragment>
+       <button
+        onClick={action}
+        className={styled.Button}>
+           {children}
+       </button>
     )
 }

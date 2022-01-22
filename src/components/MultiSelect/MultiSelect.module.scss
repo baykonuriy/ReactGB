@@ -1,0 +1,9 @@
+.MultiSelect {
+  width: 160px;
+  position: relative;
+  &__enter {
+    position: absolute;
+    top: 11px;
+    right: 8px;
+  }
+}

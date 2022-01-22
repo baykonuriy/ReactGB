@@ -1,47 +1,54 @@
-import React,{ useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './App.scss';
 import { AppChat } from './pages/AppChat';
-import moment from 'moment'
-
+import { useFiltredMessage } from './hooks/useFiltredMessage';
+import { useColdPage } from './hooks/useColdPage';
+import { useFetchingMessages } from './hooks/useFetchingMessages';
 
 function App() {
- 
-  const [messages, setMessages] = useState(
-    [
-      {
-        id: 1,
-        date: 'January 11th 2022, 09:18 pm',
-        text: 'Многие думают, что Lorem Ipsum - взятый с потолка псевдо-латинский набор слов, но это не совсем так.',
-        user: 'Ivanov. I'
-      }
-    ])
 
-  function createMessage(newMessage){
-    setMessages([...messages, newMessage])
-  }
+const
+  [
+    loadMessages,
+    createMessage,
+    removeMessage,
+    messages,
+    loading,
+    error
+  ] = useFetchingMessages()
+const
+  [
+    currFilters,
+    filterValue,
+    addFilter,
+    addValueInCurrFilter,
+    clearFilters,
+    removeThisChips,
+    filtredMessage
+  ] = useFiltredMessage(messages)
 
   useEffect(()=>{
-    if(messages[messages.length - 1].user !== 'Robot'){
-      setMessages(
-        [
-          ...messages,
-          {
-            id: Date.now(),
-            date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
-            text: `Ваше сообщение «${messages[messages.length - 1].text}» отправлено и скоро будет обработано оператором. Ждите`,
-            user: 'Robot'
-          }
-        ])
-    }
-  }, [messages])
+    console.log(loading)
+  }, [loading])
+
+const ColdPage = useColdPage(filtredMessage, messages)
 
   return (
     <div className="App">
       <AppChat
-        create={createMessage}
-        messages={messages}/>
+        loading={loading}
+        coldPage={ColdPage}
+        removeMessage={(filter)=>removeMessage(filter)}
+        removeChips={(message)=>removeThisChips(message)}
+        filterValue={filterValue}
+        currFilters={currFilters}
+        loadMessages={loadMessages}
+        clearFilters={clearFilters}
+        addFilter={(filter)=>addFilter(filter)}
+        addValueInCurrFilter={(valFilt)=>addValueInCurrFilter(valFilt)}
+        create={(newMessage)=>createMessage(newMessage)}
+        messages={filtredMessage}/>
     </div>
-    
   );
 }
 

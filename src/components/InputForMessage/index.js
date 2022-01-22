@@ -15,7 +15,6 @@ export const InputText = (props) =>{
         }
     }, [emptyInput])
 
-
     return(
         <input
             onChange={event => setMyValue(event.target.value)}
