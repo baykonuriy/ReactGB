@@ -1,0 +1,15 @@
+.Button {
+  background: #2f9aff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  box-shadow: inset 0px -1px 0px rgba(40, 47, 61, 0.12);
+  filter: drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05));
+  cursor: pointer;
+  &:hover {
+    background: #1984ea;
+  }
+  & p {
+    color: #fff;
+    font-weight: 600;
+  }
+}

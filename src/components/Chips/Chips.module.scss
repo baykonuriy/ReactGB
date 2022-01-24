@@ -1,0 +1,30 @@
+.Chips {
+  padding: 2px 12px;
+  padding-right: 4px;
+  background: rgba(16, 24, 40, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(16, 24, 40, 0.1);
+  display: flex;
+  max-height: 24px;
+  align-items: center;
+  margin-right: 8px;
+  cursor: pointer;
+  &__key {
+    color: rgba(16, 24, 40, 0.6);
+    margin-right: 4px;
+  }
+  &__value {
+    margin-right: 8px;
+  }
+  &__close {
+    opacity: 0.5;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

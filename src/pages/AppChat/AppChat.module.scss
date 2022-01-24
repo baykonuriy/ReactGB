@@ -1,0 +1,9 @@
+.AppChat {
+  display: flex;
+  flex-direction: row;
+  &__Wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+}
