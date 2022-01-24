@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react';
 import './App.scss';
-import { AppChat } from './pages/AppChat';
+import { AppChat } from './pages/AppChat/AppChat';
 import { useFiltredMessage } from './hooks/useFiltredMessage';
 import { useColdPage } from './hooks/useColdPage';
 import { useFetchingMessages } from './hooks/useFetchingMessages';
+import { useChatList } from './hooks/useChatList';
+
 
 function App() {
 
+const [chats] = useChatList()
+console.log(chats)
 const
   [
     loadMessages,
@@ -16,6 +20,7 @@ const
     loading,
     error
   ] = useFetchingMessages()
+
 const
   [
     currFilters,
@@ -36,6 +41,7 @@ const ColdPage = useColdPage(filtredMessage, messages)
   return (
     <div className="App">
       <AppChat
+        chats={chats}
         loading={loading}
         coldPage={ColdPage}
         removeMessage={(filter)=>removeMessage(filter)}

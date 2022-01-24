@@ -16,7 +16,6 @@ export const FilterBar = (props) =>{
         } = props
 
     function removeThisChips(e){
-        //console.log('removeThisChips', e)
         removeChips(e)
     }
     return(

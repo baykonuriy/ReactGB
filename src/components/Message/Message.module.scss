@@ -4,8 +4,8 @@
   width: 100%;
   &__userpic {
     position: absolute;
-    width: 56px;
-    height: 56px;
+    width: 24px;
+    height: 24px;
     background: #fff;
     border-radius: 150px;
     overflow: hidden;
@@ -15,17 +15,21 @@
   }
   &__wrapper {
     position: relative;
-    padding: 20px;
+    padding: 12px;
     border-radius: 12px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     background: #fff;
     margin-bottom: 56px;
     box-shadow: 0px 4px 23px rgba(150, 150, 216, 0.16);
     width: 100%;
+    border: 1px solid rgba(16, 24, 40, 0);
     &:hover {
       box-shadow: 0px 4px 23px rgba(150, 150, 216, 0);
       border: 1px solid rgba(16, 24, 40, 0.05);
+    }
+    &__content {
+      width: 100%;
     }
   }
   &__header {
