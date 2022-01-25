@@ -1,7 +1,9 @@
-import React, {useState} from "react"
+import { useState } from "react"
+import axios from 'axios'
 import Konstantin from '../static/images/1.jpeg'
 import Ekaterina from '../static/images/3.jpeg'
 import Oleg from '../static/images/4.jpeg'
+
 
 export const useChatList = () =>{
     const [chats, setChats] = useState(

@@ -3,23 +3,35 @@ import MessageService from '../API/MessageService';
 import moment from 'moment'
 
 export const useFetchingMessages = () =>{
+    const [chats, setChats] = useState([])
     const [messages, setMessages] = useState([])
     const [removedMessages, setRemovedMessages] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
-
+  
     const loadMessages = async () =>{
         try{
             setLoading(true)
             const response = await MessageService.getOldMessages()
             setMessages([...messages, ...response])
         } catch(e){
-            setError(true)
             setLoading(false)
+            setError(true)
         } finally{
             setLoading(false)
         }
     }
+
+    async function getChats(){
+      const result = await MessageService.getChats()
+      let json = await result.json()
+      setChats([...json])
+    }
+
+    useEffect(()=>{
+      getChats()
+    }, [])
+
 
     const createMessage = newMessage =>{
         newMessage.role = 'sender'
@@ -66,7 +78,8 @@ export const useFetchingMessages = () =>{
         createMessage,
         removeMessage,
         messages,
-        removedMessages,
         loading,
-        error]
+        error,
+        chats
+      ]
 }
