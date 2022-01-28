@@ -4,8 +4,8 @@ const chatsUrl = 'https://chat-f33f6-default-rtdb.firebaseio.com/chats.json'
 
 export default class MessageService {
     
-    static async getOldMessages(){
-        const response = await axios.get(messagesUrl)
+    static async getOldMessages(url = messagesUrl){
+        const response = await axios.get(url)
         return response.data
     }
 
@@ -35,9 +35,7 @@ export default class MessageService {
       axios.put(url, [...tempoChats])
       return tempoChats
     }
-
-
-
+    
     static async filterServerMessages(messages, removedMess, url = messagesUrl){
         let serverMessages = []
         await axios.get(url)

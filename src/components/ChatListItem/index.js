@@ -4,20 +4,9 @@ import { NavLink } from "react-router-dom";
 import { FunctionButton } from "..";
 import { useFetchingMessages } from "../../hooks/useFetchingMessages";
 
-export const ChatListItem = ({chat}) => {
+export const ChatListItem = ({chat, action}) => {
     const [hover, setHover] = useState(false)
-    const
-        [
-            loadMessages,
-            createMessage,
-            removeMessage,
-            messages,
-            loading,
-            error,
-            chats,
-            addChat,
-            removeChat
-        ] = useFetchingMessages()
+    
     return(
         <NavLink
             onMouseOver={()=> setHover(true)}
@@ -33,7 +22,7 @@ export const ChatListItem = ({chat}) => {
             <div className={styled.ChatListItem__actions}>
                 <FunctionButton
                     size={20}
-                    action={()=> removeChat(chat.id)}>
+                    action={()=> action(chat.id)}>
                     <svg 
                         width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                         style=

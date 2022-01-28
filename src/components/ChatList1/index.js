@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from './ChatList.module.scss';
 import { InputText, ChatListItem } from "..";
 import { useFetchingMessages } from "../../hooks/useFetchingMessages";
@@ -16,6 +16,9 @@ export const ChatList1 = () => {
             addChat,
             removeChat
         ] = useFetchingMessages()
+    useEffect(()=>{
+        console.log('chats list', chats)
+    }, [chats])
     return(
         <div className={styled.chatList}>
             <div className={styled.chatList__addChat}>
@@ -32,7 +35,10 @@ export const ChatList1 = () => {
                 chats.sort((a, b) => b.id - a.id).map(chat => {
                    
                     return(
-                        <ChatListItem chat={chat} key={chat.id}/>
+                        <ChatListItem
+                            chat={chat}
+                            key={chat.id}
+                            action={removeChat}/>
                     )
                 })
             }
