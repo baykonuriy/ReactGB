@@ -8,7 +8,8 @@ export const InputText = (props) =>{
         {
             action,
             children,
-            iconTitle
+            iconTitle,
+            placeholder
         } = props
     const inp = useRef()
     function sendValue(e){
@@ -22,6 +23,7 @@ export const InputText = (props) =>{
         <div className={styled.InputText}>
             <input
                 autoFocus
+                placeholder={placeholder}
                 ref={inp}
                 style={{paddingRight: "24px"}}
                 className={styled.InputText__inp}

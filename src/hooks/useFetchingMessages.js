@@ -28,10 +28,25 @@ export const useFetchingMessages = () =>{
       setChats([...json])
     }
 
-    useEffect(()=>{
-      getChats()
-    }, [])
+    const [chatCounter, setChatCounter] = useState(0)
 
+    useEffect(()=>{
+      if(chatCounter === 0 || chatCounter > chats.length){
+        getChats()
+        setChatCounter(chats.length)
+      }
+    }, [chats])
+
+    async function addChat(chatName){
+      const addedChat = await MessageService.setChat(chatName, chats)
+      setChats([...chats, addedChat])
+    }
+
+    async function removeChat(chatId){
+      const modifiedArrChats = await MessageService.removeChat(chatId, chats)
+      console.log('modifiedArrChats', modifiedArrChats)
+      setChats([...modifiedArrChats])
+    }
 
     const createMessage = newMessage =>{
         newMessage.role = 'sender'
@@ -80,6 +95,8 @@ export const useFetchingMessages = () =>{
         messages,
         loading,
         error,
-        chats
+        chats,
+        addChat,
+        removeChat
       ]
 }
