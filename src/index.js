@@ -4,8 +4,8 @@ import './index.scss';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
 // import { createStore } from 'redux'
-// import {Provider} from 'react-redux'
-// import {store} from './store'
+import {Provider} from 'react-redux'
+import {store} from './store'
 import { ThemeProvider, createTheme } from '@mui/material'
 
 const theme = createTheme({
@@ -17,9 +17,14 @@ const theme = createTheme({
 })
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <App/>
-  </ThemeProvider>,
+  // <Provider store={store}>
+  //   <ThemeProvider theme={theme}>
+  //     <App/>
+  //   </ThemeProvider>
+  // </Provider>
+  <Provider store={store}>
+    <App/> 
+  </Provider>,
   document.getElementById('root')
 );
 // reportWebVitals();

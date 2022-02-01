@@ -1,129 +1,71 @@
-import React, {Fragment, useRef, useEffect, useState} from "react";
-import moment from "moment";
-import { Message } from "../../components/Message";
-import
-    {
-        SendMessagePanel,
-        FilterBar,
-        Button,
-        ChatList
-    } from "../../components";
-import classed from "./AppChat.module.scss"
+import React, { useEffect, useState } from 'react';
+import '../../App.scss';
+import styled from './Layout.module.scss'
+import { Route, Routes, useLocation, useParams, Outlet } from 'react-router-dom';
+import { ChatList1 } from '../../components';
+import { Chats } from './Chats/Chats';
+import { useFiltredMessage } from '../../hooks/useFiltredMessage';
+import { useColdPage } from '../../hooks/useColdPage';
+import { useFetchingMessages } from '../../hooks/useFetchingMessages';
 
-export const AppChat = (props) =>{
-    const 
-        {
-            chats,
-            coldPage,
-            messages,
-            create,
-            addFilter,
-            currFilters,
-            filterValue,
-            clearFilters,
-            addValueInCurrFilter,
-            loadMessages,
-            removeChips,
-            removeMessage,
-            loading
-        } = props
-    
-    useEffect(()=>{
-        console.log(loading)
-    },[loading])
+export const AppChat = () => {
+  
+  const
+    [
+      loadMessages,
+      createMessage,
+      removeMessage,
+      messages,
+      loading,
+      error,
+      chats
+    ] = useFetchingMessages()
 
-    function sendMessage(e){
-        create(
-            {
-                id: Date.now(),
-                date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
-                text: e,
-                user: 'Ivanov. I'
-            }
-        )
-    }
+  const
+    [
+      currFilters,
+      filterValue,
+      addFilter,
+      addValueInCurrFilter,
+      clearFilters,
+      removeThisChips,
+      filtredMessage
+    ] = useFiltredMessage(messages)
 
-    function sendFilter(filter){
-        addFilter(filter)
-    }
+  const ColdPage = useColdPage(filtredMessage, messages)
+  const id = Object.values(useParams())
 
-    function removeThisChips(e){
-        removeChips(e)
-    }
+  useEffect(()=>{
+    console.log('loading', loading)
+    console.log('error', error)
+  }, [loading])
 
-    const messagePage = useRef()
-    const [countMessage, setCountMessage] = useState(0)
-
-    useEffect(()=>{
-        if(countMessage < messages.length){
-            messagePage.current.scrollTop = messagePage.current.scrollHeight - messagePage.current.clientHeight
-            setCountMessage(messages.length)
-        }
-    }, [messagePage, messages])
-    
-    return(
-            <div className={classed.AppChat}>
-                <ChatList
-                    chats={chats}>
-                </ChatList>
-                <div className={classed.AppChat__Wrapper}>
-                    <FilterBar
-                            disabledFilter=
-                            {
-                                messages.length === 0?
-                                    true :
-                                    false
-                            }
-                            filterValue={filterValue}
-                            currFilters={currFilters}
-                            addFilter={sendFilter}
-                            clear={clearFilters}
-                            addValueFilter={addValueInCurrFilter}
-                            removeChips={removeThisChips}
-                    />
-                    <div
-                        className="page"
-                        ref={messagePage}>
-                        {
-                            coldPage === false?
-                                messages.map(item=>{
-                                    return  <Message
-                                                removeMessage={removeMessage}
-                                                message={item}
-                                                key={item.id}/>
-                                })
-                                :
-                                loading === true?
-                                <div className="coldPage">
-                                    <p>Loading...</p>
-                                </div>
-                                :
-                                coldPage === 'NotMessages'?
-                                <div className="coldPage">
-                                    <div className="coldPage__text">
-                                        <h2>Нет сообщений</h2>
-                                        <p>
-                                            Напишите сообщение и нажмите кнопку отправить.<br/>
-                                            Или восстановите удаленные сообщения
-                                        </p>
-                                    </div>
-                                    <Button
-                                        action={loadMessages}>
-                                        <p>Восстановить</p>
-                                    </Button>
-                                </div>
-                                :
-                                <div className="coldPage">
-                                    <div className="coldPage__text">
-                                        <h2>Ничего не найдено</h2>
-                                    </div>
-                                </div>
-
-                        }
-                    </div>
-                    <SendMessagePanel
-                    sendMessage={sendMessage}/>
-                </div>
-            </div>
-    )
+  return (
+    <div className={styled.AppChat}>
+      <ChatList1/>
+       <Routes>
+         <Route
+            path={id[0]}
+            element=
+              {
+                <Chats
+                  chats={chats}
+                  loading={loading}
+                  coldPage={ColdPage}
+                  removeMessage={(filter)=>removeMessage(filter)}
+                  removeChips={(message)=>removeThisChips(message)}
+                  filterValue={filterValue}
+                  currFilters={currFilters}
+                  loadMessages={loadMessages}
+                  clearFilters={clearFilters}
+                  addFilter={(filter)=>addFilter(filter)}
+                  addValueInCurrFilter={(valFilt)=>addValueInCurrFilter(valFilt)}
+                  create={(newMessage)=>createMessage(newMessage)}
+                  messages={filtredMessage}
+                />
+              }/>
+              
+       </Routes>
+    </div>
+  );
 }

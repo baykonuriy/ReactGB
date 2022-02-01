@@ -1,16 +1,15 @@
 import React, {Fragment, useRef, useEffect, useState} from "react";
 import moment from "moment";
-import { Message } from "../../components/Message";
+import { Message } from "../../../components/Message";
 import
     {
         SendMessagePanel,
         FilterBar,
-        Button,
-        ChatList
-    } from "../../components";
+        Button
+    } from "../../../components";
 import classed from "./AppChat.module.scss"
 
-export const AppChat = (props) =>{
+export const Chats = (props) =>{
     const 
         {
             chats,
@@ -63,9 +62,6 @@ export const AppChat = (props) =>{
     
     return(
             <div className={classed.AppChat}>
-                <ChatList
-                    chats={chats}>
-                </ChatList>
                 <div className={classed.AppChat__Wrapper}>
                     <FilterBar
                             disabledFilter=

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import 
     {
         List,
@@ -9,9 +9,14 @@ import
         Typography
     }
 from '@mui/material'
+import { useLocation, NavLink } from 'react-router-dom'
 import myStyled from './ChatList.module.scss'
 
 export const ChatList = ({chats}) => {
+    const history = useLocation()
+    const typeChats = useState('material')
+
+    console.log('history', history)
 
     return(
         <List
@@ -53,4 +58,5 @@ export const ChatList = ({chats}) => {
             }
         </List>
     )
+    
 }

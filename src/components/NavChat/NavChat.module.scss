@@ -1,0 +1,18 @@
+.NavChat {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(16, 25, 40, 0.1);
+  width: 64px;
+  height: 100vh;
+  &__list {
+    &__item {
+      & a {
+        padding: 20px;
+        display: block;
+        &.activeLink {
+          background: #ebf5ff;
+        }
+      }
+    }
+  }
+}
