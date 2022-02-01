@@ -4,4 +4,16 @@
   justify-content: center;
   width: 100%;
   padding-top: 72px;
+  &__User {
+    display: flex;
+    flex-direction: column;
+    &__FirstEndPatronim {
+      display: flex;
+      flex-direction: row;
+    }
+    & p {
+      padding-bottom: 2px;
+      margin-right: 4px;
+    }
+  }
 }

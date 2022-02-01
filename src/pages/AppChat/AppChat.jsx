@@ -36,10 +36,6 @@ export const AppChat = () => {
   const id = Object.values(useParams())
 
   useEffect(()=>{
-    console.log('id ', chats)
-  }, [chats])
-
-  useEffect(()=>{
     console.log('loading', loading)
     console.log('error', error)
   }, [loading])
@@ -68,6 +64,7 @@ export const AppChat = () => {
                   messages={filtredMessage}
                 />
               }/>
+              
        </Routes>
     </div>
   );

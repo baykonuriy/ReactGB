@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, NavLink, Outlet, Navigate} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import './App.scss';
 import { LayOutChat } from './pages/AppChat/Layout';
 import { AppChat } from './pages/AppChat/AppChat';
@@ -7,6 +8,9 @@ import { Profile } from './pages/AppChat/Profile/Profile';
 import { Main } from './pages/AppChat/Main/Main'
 
 function App() {
+  const dispath = useDispatch()
+  const profile = useSelector(state => state.profile)
+
   return(
     <BrowserRouter>
       <Routes>
