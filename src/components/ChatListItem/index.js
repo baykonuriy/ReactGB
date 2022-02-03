@@ -4,13 +4,14 @@ import { NavLink } from "react-router-dom";
 import { FunctionButton } from "..";
 import { useFetchingMessages } from "../../hooks/useFetchingMessages";
 
-export const ChatListItem = ({chat, action}) => {
+export const ChatListItem = ({chat, action, clickHandler}) => {
     const [hover, setHover] = useState(false)
     
     return(
         <NavLink
             onMouseOver={()=> setHover(true)}
             onMouseOut={()=> setHover(false)}
+            onClick={() => clickHandler(chat.id)}
             to={chat.id}
             className={({isActive})=> isActive? styled.ChatListItem + ' ' + styled.active : styled.ChatListItem}
             key={chat.id}>

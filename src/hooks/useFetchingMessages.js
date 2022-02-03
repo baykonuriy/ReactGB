@@ -5,50 +5,46 @@ import moment from 'moment'
 
 export const useFetchingMessages = () =>{
 
-    // const dispathc = useDispatch()
-    // const 
-
-    const [chats, setChats] = useState([])
+    const dispatch = useDispatch()
+    const chats = useSelector(state => state.chats)
     const [messages, setMessages] = useState([])
     const [removedMessages, setRemovedMessages] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
-  
-    const loadMessages = async () =>{
-        try{
-            setLoading(true)
-            const response = await MessageService.getOldMessages()
-            setMessages([...messages, ...response])
-        } catch(e){
-            setLoading(false)
-            setError(true)
-        } finally{
-            setLoading(false)
-        }
-    }
 
     async function getChats(){
       const result = await MessageService.getChats()
       let json = await result.json()
-      setChats([...json])
+      dispatch({type: 'GET_CHATS', payload: [...json]})
     }
 
     async function addChat(chatName){
-      const addedChat = await MessageService.setChat(chatName, chats)
-      setChats([...chats, addedChat])
+      const addedChat = await MessageService.setChat(chatName, chats.chats)
+      dispatch({type: 'ADD_CHAT', payload: addedChat})
     }
 
     async function removeChat(chatId){
-      const modifiedArrChats = await MessageService.removeChat(chatId, chats)
-      console.log('modifiedArrChats', modifiedArrChats)
-      setChats([...modifiedArrChats])
-      console.log('chats', chats)
-     
+      const modifiedArrChats = await MessageService.removeChat(chatId, chats.chats)
+      dispatch({type: 'REMOVE_CHAT', payload: [...modifiedArrChats]})
     }
 
     useEffect(()=>{
+      if(chats.chats.length === 0)
       getChats()
-    }, [])
+    }, [chats])
+
+    const loadMessages = async (id) =>{
+      try{
+          setLoading(true)
+          const response = await MessageService.getOldMessages(id)
+          setMessages([...messages, ...response])
+      } catch(e){
+          setLoading(false)
+          setError(true)
+      } finally{
+          setLoading(false)
+      }
+    }
 
     const createMessage = newMessage =>{
         newMessage.role = 'sender'
