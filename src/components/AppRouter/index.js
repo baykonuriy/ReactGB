@@ -5,8 +5,8 @@ import {LayOutChat } from "../../pages/AppChat/Layout"
 import { Main } from "../../pages/AppChat/Main/Main"
 import { Profile } from "../../pages/AppChat/Profile/Profile"
 import { AppChat } from "../../pages/AppChat/AppChat"
-import { Auth } from '..'
-import { Registration } from ".."
+import Auth from '../Auth/index'
+import Registration from "../Registration/index"
 
 export const AppRouter = () =>{
     const {isAuth, setIsAuth} = useContext(AuthContext)

@@ -6,15 +6,15 @@ import App from './App';
 // import { createStore } from 'redux'
 import {Provider} from 'react-redux'
 import {store} from './store'
-import { ThemeProvider, createTheme } from '@mui/material'
+// import { ThemeProvider, createTheme } from '@mui/material'
 
-const theme = createTheme({
-  palette:{
-    text:{
-      primary: '#101828'
-    }
-  }
-})
+// const theme = createTheme({
+//   palette:{
+//     text:{
+//       primary: '#101828'
+//     }
+//   }
+// })
 
 ReactDOM.render(
   // <Provider store={store}>

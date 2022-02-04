@@ -1,19 +1,29 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import styled from "./Auth.module.scss"
 import { AuthContext } from "../../context";
 
-export const Auth = () => {
+const Auth = ({users}) => {
     const { isAuth, setIsAuth } = useContext(AuthContext)
-    function login(e){
+
+    function autorization(e){
         e.preventDefault()
-        setIsAuth(true)
-        localStorage.setItem('auth', true)
+        //console.log('users[e.target.login]', )
+        if(users[e.target.login.value] && users[e.target.login.value].pass === e.target.user_pass.value){
+            setIsAuth(true)
+            localStorage.setItem('auth', true)
+        }
+        
     }
+
+    useEffect(() => {
+        console.log('users', users)
+    }, [users])
     return(
         <div 
             className={styled.Auth}
-            onSubmit={login}>
+            onSubmit={autorization}>
             <h2>Autorization</h2>
             <form className={styled.Auth__form}>
                 <label
@@ -21,9 +31,12 @@ export const Auth = () => {
                     >
                     <span
                         className={styled.Auth__form__field__label}>
-                        Name
+                        Login
                     </span>
-                    <input id="user_name" type="text"/>
+                    <input
+                        name="login"
+                        id="login"
+                        type="text"/>
                 </label>
                 <label
                     className={styled.Auth__form__field}
@@ -32,7 +45,10 @@ export const Auth = () => {
                         className={styled.Auth__form__field__label}>
                         Password
                     </span>
-                    <input id="user_pass" type="text"/>
+                    <input
+                        name="user_pass"
+                        id="user_pass"
+                        type="text"/>
                 </label>
                 <button
                     style={{marginRight: 8}}
@@ -49,3 +65,9 @@ export const Auth = () => {
         </div>
     )
 }
+
+const mapStateToProps = state => ({
+    users: state.chats.users
+})
+
+export default connect(mapStateToProps)(Auth)

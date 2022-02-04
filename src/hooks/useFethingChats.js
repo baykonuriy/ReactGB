@@ -16,7 +16,6 @@ export const useFetchingChats = () => {
 
   async function getChats(){
       const response = await MessageService.getChats()
-      console.log(response)
       const resultChats = [...response.chats]
       
       dispatch(updateChatsAction(resultChats.sort((a, b) => b.id - a.id)))
