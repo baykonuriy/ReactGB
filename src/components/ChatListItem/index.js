@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import styled from './ChatListItem.module.scss'
 import { NavLink } from "react-router-dom";
 import { FunctionButton } from "..";
-import { useFetchingMessages } from "../../hooks/useFetchingMessages";
 
 export const ChatListItem = ({chat, action, clickHandler}) => {
     const [hover, setHover] = useState(false)
+    
     
     return(
         <NavLink
@@ -20,10 +20,17 @@ export const ChatListItem = ({chat, action, clickHandler}) => {
                 <span className="description">{chat.status}</span>
             </div>
 
-            <div className={styled.ChatListItem__actions}>
+            <div
+                className={styled.ChatListItem__actions}
+                style=
+                    {
+                        chat.removable === true
+                        ?   {display: "block"}
+                        :   {display: "none"}
+                    }>
                 <FunctionButton
                     size={20}
-                    action={()=> action(chat.id)}>
+                    action={()=> action(chat)}>
                     <svg 
                         width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                         style=

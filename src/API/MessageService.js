@@ -1,12 +1,16 @@
 import axios from "axios";
 
-const chatsUrl = 'https://chats1-ea230-default-rtdb.firebaseio.com/chats.json'
+const chatsUrl = 'https://chat3-cb6ea-default-rtdb.firebaseio.com/messanger.json'
 
 export default class MessageService {
 
     static async getChats(url = chatsUrl){
       const result = await axios(url)
-      return result
+      return result.data
+    }
+
+    static async setMessanger(messanger, url = chatsUrl){
+      axios.put(url, messanger)
     }
 
     static async setChat(newChat, chats, url = chatsUrl){
@@ -23,7 +27,7 @@ export default class MessageService {
       await axios.put(chatsUrl, chats)
     }
 
-    
+
     
     // static async filterServerMessages(messages, removedMess, url = messagesUrl){
     //     let serverMessages = []

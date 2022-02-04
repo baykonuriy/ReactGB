@@ -1,58 +1,36 @@
 import React, {useEffect} from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from './ChatList.module.scss';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useFetchingChats } from '../../hooks/useFethingChats';
 import { InputText, ChatListItem } from "..";
 
 export const ChatList1 = () => {
-    const dispatch = useDispatch()
-    const current = useSelector(state => state.chats.current)
     const chats = useSelector(state => state.chats.chats)
-
-    const params = Object.values(useParams())
-
-    useEffect(() => {
-        console.log('params', params)
-    }, [params])
-
-    const
-    [
-      getChats,
-      addChat,
-      removeChat,
-      getCurrChat
-    ] = useFetchingChats()
-  
+    const [getCurrChat, elementActionHandler] = useFetchingChats()
     const navigate = useNavigate()
     const goBack = () => navigate(-1)
     const goFirstChat = () => navigate('0')
 
-    useEffect(()=>{
-        getChats()
-        // goFirstChat()
-      }, [])
-
     useEffect(() => {
-        if(Object.keys(current).length === 0)
-        setTimeout(() => {
-            // getCurrChat('0')
-            // goFirstChat()
-        }, 300)
-     }, [current])
-
-
-    function removeCurrentChat(chat){
-        removeChat(chat)
-        goBack()
-    }
-
+        goFirstChat()
+    }, [])
 
     return(
         <div className={styled.chatList}>
             <div className={styled.chatList__addChat}>
                 <InputText
-                    action={(chatName)=>{addChat(chatName)}}
+                    action={name => elementActionHandler(
+                        'chats',
+                        {
+                            chatName: name,
+                            removable: true,
+                            user: "Robot",
+                            status: "Online",
+                            userpic: "",
+                            id: String(Number(chats[0].id) + 1)
+                        },
+                        'add')}
                     placeholder='Chat name'
                     iconTitle='Add chat'>
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,7 +45,10 @@ export const ChatList1 = () => {
                             <ChatListItem
                                 chat={chat}
                                 key={chat.id}
-                                action={removeCurrentChat}
+                                action={(chat) => {
+                                    goBack()
+                                    elementActionHandler('chats', chat, 'remove')
+                                }}
                                 clickHandler={(id) => getCurrChat(id)}/>
                         )
                     })

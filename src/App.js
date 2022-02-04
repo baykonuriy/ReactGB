@@ -1,27 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './components';
-import { useFetchingChats } from './hooks/useFethingChats';
 import './App.scss';
+import { AuthContext } from './context'
 
 function App() {
-  const
-  [
-    getChats,
-    addChat,
-    removeChat,
-    getCurrChat
-  ] = useFetchingChats()
+  const [isAuth, setIsAuth] = useState(false)
 
   useEffect(() => {
-    getChats()
-    // getCurrChat('0')
+    if(localStorage.getItem('auth')){
+      setIsAuth(true)
+    }
   }, [])
 
   return(
-    <BrowserRouter>
-      <AppRouter/>
-    </BrowserRouter>
+    <AuthContext.Provider value={{
+      isAuth,
+      setIsAuth
+    }}>
+      <BrowserRouter>
+        <AppRouter/>
+      </BrowserRouter>
+    </AuthContext.Provider>
+    
     
   )
 }

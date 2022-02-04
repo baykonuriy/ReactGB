@@ -1,51 +1,67 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MessageService from '../API/MessageService';
-import { updateChatsAction, updateCurrentAction } from "../store/chatsReducer";
-import moment from "moment";
+import
+  {
+    updateChatsAction,
+    updateCurrentAction,
+    updateMessagesAction
+  }
+from "../store/chatsReducer";
 
 export const useFetchingChats = () => {
   const dispatch = useDispatch()
+  const messanger = useSelector(state => state.chats)
   const chats = useSelector(state => state.chats.chats)
-  const current = useSelector(state => state.chats.current)
 
   async function getChats(){
-      const result = await MessageService.getChats()
-      dispatch({type: 'UPDATE_CHATS', payload: result.data.sort((a, b) => b.id - a.id)})
+      const response = await MessageService.getChats()
+      console.log(response)
+      const resultChats = [...response.chats]
+      
+      dispatch(updateChatsAction(resultChats.sort((a, b) => b.id - a.id)))
+      const resultMessages = [...response.messages]
+      dispatch(updateMessagesAction(resultMessages))
   }
 
-  function addChat(chatName){
-    let newChat = {
-      chatName: chatName,
-      user: "Robot",
-      status: "Online",
-      userpic: "",
-      id: '',
-      chat:
-        [
+  useEffect(()=>{
+      getChats()
+  }, [])
+
+  function elementActionHandler(type, elem, action){
+    const updateMessanger = {...messanger}
+    switch(action){
+      case 'add':
+        updateMessanger[type] = [elem, ...updateMessanger[type]]
+        break
+      case 'remove':
+        updateMessanger[type] = updateMessanger[type].filter(element => 
           {
-            id: Date.now(),
-            date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
-            text: 'В этом чате пока пусто',
-            user: 'Robot'
-          }
-        ]
+            if(type === 'chats'){
+              elementActionHandler('messages', elem, 'removeChatMessages')
+              return element.id !== elem.id
+            }else{
+              return element.id !== elem.id
+            }
+          })
+        break
+      case 'removeChatMessages':
+        updateMessanger[type] = updateMessanger[type].filter(mess => mess.chat_id !== elem.id)
+        break
     }
-    newChat.id = String(Number(chats[0].id) + 1)
-    dispatch(updateChatsAction([newChat, ...chats]))
-    addChatOnServer(newChat)
+    switch(type){
+      case 'chats':
+        dispatch(updateChatsAction(updateMessanger[type]))
+        break
+      case 'messages':
+        dispatch( updateMessagesAction(updateMessanger[type]))
+        break
+    }
+    updateAll(updateMessanger)
   }
 
-  async function addChatOnServer(newChat){
-    await MessageService.setChat(newChat, chats)
-  }
-  
-  async function removeChat(chatId){
-    const tempoChats = chats
-    .filter(chat => chat.id !== chatId)
-    .sort((a, b) => b.id - a.id)
-    dispatch(updateChatsAction(tempoChats))
-    await MessageService.removeChat(tempoChats)
+  async function updateAll(all){
+    await MessageService.setMessages(all)
   }
 
   function getCurrChat(id){
@@ -53,28 +69,9 @@ export const useFetchingChats = () => {
     dispatch(updateCurrentAction(curr))
   }
 
-  useEffect(()=>{
-    let updateChats = [...chats]
-    updateChats.forEach(chat => {
-        if(chat.id == current.id){
-            chat.chat = current.chat
-        }
-    }, [current])
-
-    updateChats = updateChats.sort((a, b) => b.id - a.id)
-
-    dispatch(
-    {
-        type: 'UPDATE_CHATS',
-        payload: updateChats
-    })
-    }, [current])
-      
   return[
-      getChats,
-      addChat,
-      removeChat,
-      getCurrChat
+    getCurrChat,
+    elementActionHandler
   ]
 
 }

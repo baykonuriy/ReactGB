@@ -21,7 +21,8 @@ body {
 }
 
 p,
-label {
+label,
+span {
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
@@ -85,6 +86,9 @@ input[type="text"] {
     outline: none;
     border: 1px solid #2f9aff;
   }
+  &::placeholder {
+    color: rgba(16, 24, 40, 0.6);
+  }
 }
 
 .InputText {
@@ -105,6 +109,30 @@ button {
   background: none;
   outline: none;
   border: none;
+}
+
+.Button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  box-shadow: inset 0px -1px 0px rgba(40, 47, 61, 0.12);
+  filter: drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05));
+  cursor: pointer;
+  &.primary {
+    background: #2f9aff;
+    color: rgba(255, 255, 255, 0.9);
+    &:hover {
+      background: #1984ea;
+      color: rgba(255, 255, 255, 1);
+    }
+  }
+  &.secondary {
+    border: 1px solid rgba(16, 24, 40, 0.1);
+    color: rgba(16, 24, 40, 0.6);
+    &:hover {
+      color: rgba(16, 24, 40, 1);
+      border: 1px solid rgba(16, 24, 40, 0.25);
+    }
+  }
 }
 
 li {

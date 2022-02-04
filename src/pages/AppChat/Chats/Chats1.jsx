@@ -1,17 +1,28 @@
-import React, {Fragment, useRef, useEffect, useState} from "react";
+import React, { useRef, useEffect, useState} from "react";
 import { useSelector } from "react-redux";
-import { useFetchingMessages } from "../../../hooks/useFetchingMessages1";
+import { useParams } from 'react-router-dom'
 import moment from "moment";
 import { Message } from "../../../components/Message";
 import { SendMessagePanel } from "../../../components";
+import { useFetchingChats } from "../../../hooks/useFethingChats";
 import classed from "./AppChat.module.scss"
 
-export const Chats = (props) =>{
-    
-    const messages = useSelector(state => state.chats.current.chat)
-    const [createMessage, removeMessage] = useFetchingMessages()
+export const Chats = () =>{
+    const messages = useSelector(state => state.chats.messages)
     const messagePage = useRef()
     const [countMessage, setCountMessage] = useState(0)
+    const [currentMessageCounter, setCurrentMessageCounter] = useState(0)
+    const [_, elementActionHandler] = useFetchingChats()
+    const id = Object.values(useParams())
+
+    useEffect(() =>{
+        let updateMessageCounter = 0
+        messages.forEach(mess => {
+            if(mess.chat_id === Number(id[0]))
+                updateMessageCounter += 1
+        })
+        setCurrentMessageCounter(updateMessageCounter)
+    }, [id, messages])
 
     useEffect(()=>{
         if(messages){
@@ -27,31 +38,36 @@ export const Chats = (props) =>{
                     <div
                         className="page"
                         ref={messagePage}>
-                        {
-                            messages ?
-                                messages.map(mess => {
-                                    return(
-                                        <Message
-                                            key={mess.id}
-                                            message={mess}
-                                            removeMessage={removeMessage}
-                                        />
-                                    )
+                        {   
+                            currentMessageCounter > 0
+                            ?   messages.sort((a, b) => a.id - b.id).map(mess => {
+                                    if(mess.chat_id === Number(id[0])){
+                                        return(
+                                            <Message
+                                                key={mess.id}
+                                                message={mess}
+                                                removeMessage={mess=> {
+                                                    elementActionHandler('messages', mess, 'remove')
+                                                }}
+                                            />
+                                        )
+                                    }
                                 })
-                            :
-                            <div className="coldPage">
-                                <h2>Выберите чат</h2>
-                            </div>
+                            :   <div className="coldPage"><h2>No message</h2></div>
+
                         }
                     </div>
                     <SendMessagePanel
-                        sendMessage={(message) => createMessage(
+                        sendMessage={(message) => elementActionHandler(
+                            'messages',
                             {
+                                chat_id: Number(id[0]),
                                 id: Date.now(),
                                 date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
                                 text: message,
                                 user: 'Ivanov. I'
-                            }
+                            },
+                            'add'
                         )}/>
                 </div>
             </div>
