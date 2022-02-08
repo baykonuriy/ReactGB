@@ -1,45 +1,24 @@
-import React, { useEffect } from "react";
-import { connect, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import styled from "./Registration.module.scss"
-import { addUserAction } from "../../store/chatsReducer";
+import { Alert } from "..";
+import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
+// import { useFirebaseChats } from "../../hooks/useFirebaseChats";
 
-const Registration = ({users}) => {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-
-    const goToAuth = ()  => navigate('/auth')
-
-    function registrationUser(e){
-        e.preventDefault()
-        const nameArr = e.target.user_name.value.split(' ')
-        const user =
-        {
-            first_name: nameArr[1]? nameArr[1] : null,
-            last_name: nameArr[0],
-            patronim: nameArr[2]? nameArr[2] : null,
-            nickname: e.target.login.value,
-            pass: e.target.user_pass.value,
-            online: false,
-            chats:[],
-            id: 0
-        }
-        user.id = user.nickname
-        const updateUsers = {...users, [user.nickname]: user}
-        dispatch(addUserAction(updateUsers))
-        goToAuth()
-    }
-
-    useEffect(() => {
-        console.log('users', users)
-    }, [users])
+const Registration = () => {
+    const
+    [
+        showAlert,
+        _,
+        __,
+        registrationUser
+    ] = useFarebaseUsers()
 
     return(
-        <div
-            onSubmit={registrationUser}
-            className={styled.Registration}>
+        <div className={styled.Registration}>
             <h2>Registration</h2>
             <form
+                onSubmit={(e) => registrationUser(e)}
                 id="reg"
                 className={styled.Registration__form}>
                 <label
@@ -68,6 +47,15 @@ const Registration = ({users}) => {
                         id="login"
                         type="text"
                         placeholder="example@domain.com"/>
+                    <div style={
+                        showAlert === true
+                        ? {display: "block", marginTop: 8}
+                        : {display: "none"}
+                        }>
+                        <Alert
+                            text="Such a login is already in the system"
+                            type="error"/>
+                    </div>
                 </label>
                 <label
                     className={styled.Registration__form__field}
@@ -98,8 +86,4 @@ const Registration = ({users}) => {
     )
 }
 
-const mapStateToProps = state => ({
-    users: state.chats.users
-})
-
-export default connect(mapStateToProps)(Registration)
+export default Registration

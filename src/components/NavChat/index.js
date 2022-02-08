@@ -1,19 +1,25 @@
 import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addCurrentUserAction, getUsersAction } from "../../store/chatsReducer";
 import styled from './NavChat.module.scss'
 import { AuthContext } from "../../context";
+import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
 
 export const NavChat = () =>{
     const activeLink = ({isActive})=> isActive? styled.activeLink : ''
     const {isAuth, setIsAuth} = useContext(AuthContext)
     const navigate = useNavigate()
-    const signOut = () => navigate('/auth')
-
-    function exit(){
-        setIsAuth(false)
-        localStorage.removeItem('auth')
-        signOut()
-    }
+    
+    const
+    [
+        showAlert,
+        _,
+        __,
+        ___,
+        _____,
+        exit
+    ] = useFarebaseUsers()
 
     return(
         <div className={styled.NavChat}>

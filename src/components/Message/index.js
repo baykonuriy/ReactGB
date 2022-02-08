@@ -12,7 +12,7 @@ export const Message = (
     function removeThisMessage(){
         removeMessage(message)
     }
-
+    
     return(
         <div
             className={styled.messageCard}

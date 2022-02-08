@@ -5,20 +5,32 @@ import styled from "./Auth.module.scss";
 import { AuthContext } from "../../context";
 import { addCurrentUserAction } from "../../store/chatsReducer";
 import { fetchingUsers } from "../../asyncActions/users";
-import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
-
 import { Alert } from "..";
 
 const Auth = () => {
-    const
-    [
-        showAlert,
-        _,
-        __,
-        ___,
-        autorization
-    ] = useFarebaseUsers()
-    
+    const { isAuth, setIsAuth } = useContext(AuthContext)
+    const [viewAlert, setViewAlert] = useState(false)
+    const dispatch = useDispatch()
+    const users = useSelector(state => state.chats.users)
+    const state = useSelector(state => state.chats)
+   
+
+    async function autorization(e){
+        dispatch(fetchingUsers())
+        e.preventDefault()
+
+        if(users[e.target.login.value] && String(users[e.target.login.value].pass) == String(e.target.user_pass.value)){
+            setIsAuth(true)
+            localStorage.setItem('auth', true)
+            localStorage.setItem('user', JSON.stringify(users[e.target.login.value]))
+            dispatch(addCurrentUserAction(users[e.target.login.value]))
+            setViewAlert(false)
+        }
+        else{
+            setViewAlert(true)
+        }
+    }
+
     return(
         <div 
             className={styled.Auth}
@@ -52,7 +64,7 @@ const Auth = () => {
                         type="text"/>
                 </label>
                 <div style={
-                        showAlert === true
+                        viewAlert === true
                         ? {display: "block", marginTop: 8, marginBottom: 8}
                         : {display: "none"}
                         }>

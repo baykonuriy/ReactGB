@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState} from "react";
+import {useCollectionData} from 'react-firebase-hooks/firestore'
+import { FirebaseContext } from "../../../context";
 import { useSelector } from "react-redux";
 import { useParams } from 'react-router-dom'
 import moment from "moment";
@@ -12,7 +14,7 @@ export const Chats = () =>{
     const messagePage = useRef()
     const [countMessage, setCountMessage] = useState(0)
     const [currentMessageCounter, setCurrentMessageCounter] = useState(0)
-    const [_, elementActionHandler] = useFetchingChats()
+    const [iii, elementActionHandler, sendMessage, fireMess] = useFetchingChats()
     const id = Object.values(useParams())
 
     useEffect(() =>{

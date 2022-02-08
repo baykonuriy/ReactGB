@@ -2,22 +2,32 @@ import React, { useState } from "react";
 import styled from './ChatListItem.module.scss'
 import { NavLink } from "react-router-dom";
 import { FunctionButton } from "..";
+import { useSelector } from "react-redux";
 
 export const ChatListItem = ({chat, action, clickHandler}) => {
     const [hover, setHover] = useState(false)
-    
-    
+    const user = useSelector(state => state.chats.user)
     return(
         <NavLink
             onMouseOver={()=> setHover(true)}
             onMouseOut={()=> setHover(false)}
             onClick={() => clickHandler(chat.id)}
-            to={chat.id}
+            to={
+                chat.id.split('_')[0] === 'default'?
+                chat.id :
+                chat.id + '_' + user.id
+            }
             className={({isActive})=> isActive? styled.ChatListItem + ' ' + styled.active : styled.ChatListItem}
             key={chat.id}>
             <div className={styled.ChatListItem__textWrapper}>
-                <p>{chat.chatName}</p>
-                <span className="description">{chat.status}</span>
+                <p>{chat.login}</p>
+                <span className="description">
+                    {
+                        chat.online
+                        ? 'Online'
+                        : 'Offline'
+                    }
+                </span>
             </div>
 
             <div

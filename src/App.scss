@@ -114,8 +114,8 @@ button {
 .Button {
   padding: 8px 16px;
   border-radius: 8px;
-  box-shadow: inset 0px -1px 0px rgba(40, 47, 61, 0.12);
-  filter: drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05));
+  // box-shadow: inset 0px -1px 0px rgba(40, 47, 61, 0.12);
+  // filter: drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.05));
   cursor: pointer;
   &.primary {
     background: #2f9aff;

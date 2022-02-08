@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import '../../App.scss';
 import styled from './Layout.module.scss'
 import { Route, Routes, useLocation, useParams, Outlet, useMatch } from 'react-router-dom';
-import { ChatList1 } from '../../components';
-import { Chats } from './Chats/Chats1';
+import { useSelector } from 'react-redux';
+import ChatList1 from '../../components/ChatList/index';
+import Chat from './Chats/Chat';
 
 export const AppChat = () => {
   const id = Object.values(useParams())
-  
+  const user = useSelector(state => state.chats.user)
+  const state = useSelector(state => state.chats)
+  // console.log('appchat state', state)
+
   return (
     <div className={styled.AppChat}>
       <ChatList1/>
@@ -16,7 +20,7 @@ export const AppChat = () => {
             path={id[0]}
             element=
               {
-                <Chats
+                <Chat
                   id={id[0]}/>
               }/>
           
