@@ -3,7 +3,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import { FirebaseContext, AuthContext } from "../context";
-import { addCurrentUserAction, getUsersAction } from "../store/chatsReducer";
+import { addCurrentUserAction, getUsersAction } from "../store/chats";
 import { addUser, updateUsers, fetchingUsers } from "../asyncActions/users";
 import { useFirebaseChats } from "./useFirebaseChats";
 
@@ -15,7 +15,7 @@ export const useFarebaseUsers = () => {
     const goToAuth = ()  => navigate('/auth')
     const [showAlert, setShowAlert] = useState(false)
     const { isAuth, setIsAuth } = useContext(AuthContext)
-    const [fireUsers, loading] = useCollectionData(
+    const [fireUsers, fireUsersLoading] = useCollectionData(
         firestore.collection('state')
     )
 
@@ -154,7 +154,8 @@ export const useFarebaseUsers = () => {
         autorization,
         exit,
         getChatList,
-        updateUserChatList
+        updateUserChatList,
+        fireUsersLoading
     ]
 }
 

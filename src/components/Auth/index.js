@@ -1,10 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
 import styled from "./Auth.module.scss";
-import { AuthContext } from "../../context";
-import { addCurrentUserAction } from "../../store/chatsReducer";
-import { fetchingUsers } from "../../asyncActions/users";
 import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
 
 import { Alert } from "..";

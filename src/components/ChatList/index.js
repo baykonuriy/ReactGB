@@ -4,11 +4,9 @@ import styled from './ChatList.module.scss';
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useFirebaseChats } from "../../hooks/useFirebaseChats";
 import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
-import { updateUsers } from "../../asyncActions/users";
-import { addCurrentUserAction } from "../../store/chatsReducer";
-import { ChatListItem, DropDownField } from "..";
+import { ChatListItem, ChatCreator, Icon } from "..";
 
-const ChatList1 = ({user, users}) => {
+const ChatList = ({user, users}) => {
     const
     [
         chat,
@@ -27,7 +25,8 @@ const ChatList1 = ({user, users}) => {
         autorization,
         exit,
         getChatList,
-        updateUserChatList
+        updateUserChatList,
+        fireUsersLoading
     ] = useFarebaseUsers()
 
     const dispatch = useDispatch()
@@ -40,57 +39,48 @@ const ChatList1 = ({user, users}) => {
         goFirstChat()
     }, [])
 
-    // console.log('users list', users)
-
-    // function getAvailableList(arr){
-       
-    //     return  Object.keys(arr[0])
-    //             .filter(str => str !== user.id)
-    //             .map(elem => {
-    //                 return{
-    //                     name: elem,
-    //                     id: elem
-    //                 }
-    //     })
-    // }
-    // getAvailableList(users[0])
-
     const availableChats = useMemo(() => {
-       return getChatList(users)
+        console.log('fireUsersLoading', fireUsersLoading)
+        if(fireUsersLoading){
+            return getChatList(users)
+        } else{
+            return getChatList(fireUsers)
+        }
+       
     }, [users])
-
-    // function addNewChat(chat){
-    //     const updatedUser = {...user}
-    //     updatedUser.chats = {...updatedUser.chats, [chat.name]: users[chat.name]}
-    //     const updatedAllUsers = {...users}
-    //     updatedAllUsers[user.id] = {...updatedUser}
-    //     updateUserChatList(updatedAllUsers, updatedUser)
-    // }
 
     return(
         <div className={styled.chatList}>
             <div className={styled.chatList__addChat}>
-                <DropDownField
+                <ChatCreator
                     value={availableChats}
+                    iconTitle="Add new chat"
                     type="field"
                     action={recipient => createChat(recipient, user, firstMessage, 'Robot')}
                     >
-                </DropDownField>
+                    <Icon
+                        name="add"
+                        size={24}>
+                    </Icon>
+                </ChatCreator>
             </div>
             {
-                Object.values(user.chats)
-                .map(chat => {
-                    return (
-                        <ChatListItem
-                            chat={chat}
-                            key={chat.id}
-                            // action={(chat) => {
-                            //     goBack()
-                            //     elementActionHandler('chats', chat, 'remove')
-                            // }}
-                            clickHandler={id => getCurrentChat(id)}
-                            />
-                    )
+                fireUsersLoading ?
+                <p>Loading...</p>
+                : Object.values(fireUsers[0][user.id].chats)
+                    .map(chat => {
+                        return (
+                            <ChatListItem
+                                chat={chat}
+                                key={chat.id}
+                                // action={(chat) => {
+                                //     goBack()
+                                //     elementActionHandler('chats', chat, 'remove')
+                                // }}
+
+                                clickHandler={id => getCurrentChat(id)}
+                                />
+                        )
                     
                 })
              
@@ -104,4 +94,4 @@ const mapStateToProps = state => ({
     users: state.chats.users
 })
 
-export default connect(mapStateToProps)(ChatList1)
+export default connect(mapStateToProps)(ChatList)

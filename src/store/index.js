@@ -2,7 +2,8 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { cashReducer } from './cashReducer'
 import { customerReducer } from './customerReducer'
 import { profileReducer } from './profileReduser'
-import { chatsReduser } from './chatsReducer'
+// import { chatsReduser } from './chatsReducer'
+import { chatsReduser1 } from './chats'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import createSagaMiddleware from 'redux-saga'
@@ -14,7 +15,7 @@ const rootReducer = combineReducers({
     cash: cashReducer,
     customers: customerReducer,
     profile: profileReducer,
-    chats: chatsReduser
+    chats: chatsReduser1
 })
 
 

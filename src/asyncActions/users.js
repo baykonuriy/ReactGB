@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getUsersAction, addUserAction } from "../store/chatsReducer";
-const URLUsers = 'https://chat5-41d21-default-rtdb.europe-west1.firebasedatabase.app/users.json'
+import { getUsersAction, addUserAction } from "../store/chats/actions";
+const URLUsers = 'https://chat-9873752748903-default-rtdb.europe-west1.firebasedatabase.app/users.json'
 
 export const fetchingUsers = () => {
     return async function (dispatch){

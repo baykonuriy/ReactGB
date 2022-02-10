@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import styled from "./InputText.module.scss"
 import { FunctionButton } from "..";
 
@@ -15,8 +15,15 @@ export const InputText = (props) =>{
         } = props
     const inp = useRef()
 
+    function openListHandler(){
+        setTimeout(() => {
+            opened_list(false)
+        }, 100)
+    }
+
     if(type === 'select'){
 
+      
         function sendValue(e){
 
         }
@@ -29,11 +36,7 @@ export const InputText = (props) =>{
                     className={styled.InputText__inp}
                     value={value}
                     onFocus={() => opened_list(true)}
-                    onBlur={() => {
-                        setTimeout(() => {
-                            opened_list(false)
-                        }, 100)
-                    }}
+                    onBlur={openListHandler}
                     onChange={(e)=> sendValue(e.target.value)}
                     onClick={(e)=> e.stopPropagation()}
                     type="text"/>

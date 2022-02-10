@@ -1,13 +1,9 @@
 import { useContext, useEffect, useState } from "react"
-import { collectionGroup, query, where, getDocs } from "firebase/firestore";
-import { collection, doc, setDoc } from "firebase/firestore";  
-import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from "react-redux";
-import { updateCurrentAction, addCurrentUserAction } from "../store/chatsReducer";
+import { addCurrentUserAction } from "../store/chats";
 import { updateUsers } from "../asyncActions/users";
 import {useCollectionData} from 'react-firebase-hooks/firestore'
 import { FirebaseContext } from "../context";
-import { useFarebaseUsers } from "./useFirebaseUsers";
 import moment from "moment";
 
 export const useFirebaseChats = () => {
@@ -45,19 +41,27 @@ export const useFirebaseChats = () => {
         .collection('state')
         .doc('users')
         .set({...updatedUsers})
-        dispatch(addCurrentUserAction(updatedUser))
         dispatch(updateUsers(updatedUsers))
-        localStorage.setItem('user', JSON.stringify(updatedUser))
         localStorage.setItem('users', JSON.stringify(updatedUsers))
+        if(updatedUser){
+            dispatch(addCurrentUserAction(updatedUser))
+            localStorage.setItem('user', JSON.stringify(updatedUser))
+        }
     }
 
-    function createChat(recipient, sender, message, signature){
+    function createChat(recipient, sender, message, signature, spaсe){
         const docId = Date.now()
-        const updatedUser = {...sender}
-        updatedUser.chats = {...updatedUser.chats, [recipient.name]: users[recipient.name]}
         const updatedAllUsers = {...users}
+        const updatedUser = {...sender}
+        updatedUser.chats = {...updatedUser.chats, [recipient.id]: users[recipient.id]}
         updatedAllUsers[sender.id] = {...updatedUser}
+        updatedAllUsers[recipient.id].chats = 
+        {
+            ...updatedAllUsers[recipient.id].chats,
+            [sender.id]: users[sender.id] 
+        }
         updateUserChatList(updatedAllUsers, updatedUser)
+
         firestore
         .collection(recipient.id + '_' + sender.id)
         .doc(String(docId))
@@ -67,32 +71,36 @@ export const useFirebaseChats = () => {
                 id: String(docId),
                 date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
                 text: message,
-                user: signature
+                user: sender.id
+            }
+        )
+        firestore
+        .collection(sender.id + '_' + recipient.id)
+        .doc(String(docId))
+        .set(
+            {
+                chat_id: sender.id + '_' + recipient.id,
+                id: String(docId),
+                date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
+                text: message,
+                user: sender.id
             }
         )
     }
 
-    // const [tempoChatName, setTempoChatName] = useState('')
-
-    // const [tempoChat, tempoLoading] = useCollectionData(
-    //     firestore.collection(tempoChatName)
-    // )
+    // function createPublicChat(chatName){
+        
+    //     firestore
+    //     .collection(chatName)
+    // }
 
     function addMessage(recipient, sender, message){
-        // setTempoChatName(recipient + '_' + sender)
-        if(users[sender].chats[recipient + '_' + sender]){
-            messanger(recipient, sender, message)
-        } else{
-
-        }
-        
-        
+        messanger(recipient, sender, message)
     }
 
     function messanger(recipient, sender, message){
-
         const id = Date.now()
-        firestore
+       firestore
         .collection(recipient + '_' + sender)
         .doc(String(id))
         .set(
@@ -104,12 +112,12 @@ export const useFirebaseChats = () => {
                 user: sender
             }
         )
-        firestore
-        .collection(recipient + '_' + sender)
+       firestore
+        .collection(sender + '_' + recipient)
         .doc(String(id))
         .set(
             {
-                chat_id: id,
+                chat_id: sender + '_' + recipient,
                 id: String(id),
                 date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
                 text: message,

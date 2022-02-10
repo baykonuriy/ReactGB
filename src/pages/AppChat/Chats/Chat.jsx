@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useContext} from "react";
-import { useSelector, connect } from "react-redux";
-import moment from "moment";
+import { connect } from "react-redux";
 import { Message } from "../../../components/Message";
 import { SendMessagePanel } from "../../../components";
 import classed from "./AppChat.module.scss"
@@ -25,34 +24,16 @@ const Chat = ({users, user}) =>{
             getCurrentChat(id[0])
         }
     }, [id, loading])
-
-    console.log('chat t', chat[0])
   
-    // useEffect(() => {
-    //     getCurrentChat(page)
-    // }, [page])
-
-    // useEffect(() => {
-    //     console.log('fireMessages', fireMessages)
-    // }, [fireMessages])
-
-    //getCurrentChat(String(id[0]))
-    // useEffect(() =>{
-    //     let updateMessageCounter = 0
-    //     messages.forEach(mess => {
-    //         if(mess.chat_id === Number(id[0]))
-    //             updateMessageCounter += 1
-    //     })
-    //     setCurrentMessageCounter(updateMessageCounter)
-    // }, [id, messages])
-
-    // useEffect(()=>{
-    //     if(messages){
-    //         if(countMessage < messages.length)
-    //             messagePage.current.scrollTop = messagePage.current.scrollHeight - messagePage.current.clientHeight
-    //             setCountMessage(messages.length)
-    //     } 
-    // }, [messagePage, messages])
+    useEffect(() => {
+        if(!loading && chat){
+           if(countMessage < chat.length){
+               messagePage.current.scrollTop = 
+               messagePage.current.scrollHeight - 
+               messagePage.current.clientHeight
+           }
+        }
+    }, [chat, loading, messagePage])
     
     return(
             <div className={classed.AppChat}>
@@ -88,7 +69,7 @@ const Chat = ({users, user}) =>{
                         //     },
                         //     'add'
                         // )}
-                        //sendMessage={message => addMessage(page, user.id, message)}
+                        sendMessage={message => addMessage(id[0].split('_')[0], user.id, message)}
                         />
                 </div>
             </div>

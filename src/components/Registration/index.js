@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import styled from "./Registration.module.scss"
 import { Alert } from "..";
 import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
-// import { useFirebaseChats } from "../../hooks/useFirebaseChats";
 
 const Registration = () => {
     const

@@ -3,7 +3,7 @@ import '../../App.scss';
 import styled from './Layout.module.scss'
 import { Route, Routes, useLocation, useParams, Outlet, useMatch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import ChatList1 from '../../components/ChatList/index';
+import ChatList from '../../components/ChatList/index';
 import Chat from './Chats/Chat';
 
 export const AppChat = () => {
@@ -14,7 +14,7 @@ export const AppChat = () => {
 
   return (
     <div className={styled.AppChat}>
-      <ChatList1/>
+      <ChatList/>
        <Routes>
          <Route
             path={id[0]}

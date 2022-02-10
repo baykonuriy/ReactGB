@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCurrentUserAction, getUsersAction } from './store/chatsReducer';
+import { addCurrentUserAction, getUsersAction } from './store/chats';
 import { BrowserRouter } from 'react-router-dom';
 import { AppRouter } from './components';
 import './App.scss';
@@ -13,7 +13,7 @@ function App() {
   const users = useSelector(state => state.chats.users)
 
   useEffect(() =>{
-    console.log('users main', users)
+    // console.log('users main', users)
   }, [users])
   
   useEffect(() => {
@@ -27,7 +27,7 @@ function App() {
     }
     if(localStorage.getItem('users')){
       const AllUsers = JSON.parse(localStorage.getItem('users'))
-      console.log('AllUsers', AllUsers)
+      // console.log('AllUsers', AllUsers)
       dispatch(getUsersAction(AllUsers))
     }
   }, [])

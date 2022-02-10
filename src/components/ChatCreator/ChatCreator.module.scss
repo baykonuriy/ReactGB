@@ -1,0 +1,20 @@
+.ChatCreator {
+  position: relative;
+  & input {
+    padding-right: 32px;
+  }
+  &__List {
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    z-index: 1;
+  }
+  &__Wrapper {
+    position: relative;
+    & button {
+      top: 7px;
+      right: 4px;
+      position: absolute;
+    }
+  }
+}

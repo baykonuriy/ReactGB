@@ -15,13 +15,12 @@ import "firebase/compat/firestore"
 
 firebase.initializeApp(
   {
-    apiKey: "AIzaSyCAgue9jvJ3htZyvLcCECP52sjdlSG2YV4",
-    authDomain: "chat5-41d21.firebaseapp.com",
-    projectId: "chat5-41d21",
-    storageBucket: "chat5-41d21.appspot.com",
-    messagingSenderId: "444657482616",
-    appId: "1:444657482616:web:2e813fd54ce4335a24668d",
-    measurementId: "G-QT8E4Z1KXM"
+    apiKey: "AIzaSyDiXFxAbBcSvY0InKzAhyBKn9_tIMrZBMU",
+    authDomain: "chat-9873752748903.firebaseapp.com",
+    projectId: "chat-9873752748903",
+    storageBucket: "chat-9873752748903.appspot.com",
+    messagingSenderId: "819835967150",
+    appId: "1:819835967150:web:1452b616f2f96c3dd13f3f"
   }
 );
 
