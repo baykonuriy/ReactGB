@@ -44,7 +44,7 @@ const ChatList = ({user, users}) => {
         if(fireUsersLoading){
             return getChatList(users)
         } else{
-            return getChatList(fireUsers)
+            return getChatList(fireUsers[0])
         }
        
     }, [users])
@@ -81,9 +81,7 @@ const ChatList = ({user, users}) => {
                                 clickHandler={id => getCurrentChat(id)}
                                 />
                         )
-                    
                 })
-             
             }
         </div>
     )
