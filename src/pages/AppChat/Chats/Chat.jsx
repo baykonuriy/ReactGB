@@ -4,12 +4,14 @@ import { Message } from "../../../components/Message";
 import { SendMessagePanel } from "../../../components";
 import classed from "./AppChat.module.scss"
 import { useFirebaseChats } from "../../../hooks/useFirebaseChats";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Chat = ({users, user}) =>{
     const messagePage = useRef()
     const [countMessage, setCountMessage] = useState(0)
     const [currentMessageCounter, setCurrentMessageCounter] = useState(0)
+    const navigate = useNavigate()
+    const goFirstChat = () => navigate(`default_${user.id}`)
     const id = Object.values(useParams())
     const 
     [
@@ -20,11 +22,11 @@ const Chat = ({users, user}) =>{
     ] = useFirebaseChats()
 
     useEffect(() => {
-        if(!loading){
+        if(!loading && chat){
             getCurrentChat(id[0])
         }
-    }, [id, loading])
-  
+    }, [id, loading, chat])
+
     useEffect(() => {
         if(!loading && chat){
            if(countMessage < chat.length){
@@ -42,9 +44,23 @@ const Chat = ({users, user}) =>{
                         className="page"
                         ref={messagePage}>
                         {   
+                            // loading
+                            // ?   <div className="coldPage"><h2>Loading...</h2></div>
+                            // :   chat.map(mess => {
+                            //         return(
+                            //             <Message
+                            //                 key={mess.id}
+                            //                 message={mess}
+                            //                 // removeMessage={mess=> {
+                            //                 //     elementActionHandler('messages', mess, 'remove')
+                            //                 // }}
+                            //             />
+                            //         )
+                            //     })
                             loading
-                            ?    <div className="coldPage"><h2>No message</h2></div>
-                            :   chat.map(mess => {
+                            ?   <div className="coldPage"><h2>Loading...</h2></div>
+                            :   chat
+                            ?   chat.map(mess => {
                                     return(
                                         <Message
                                             key={mess.id}
@@ -55,6 +71,9 @@ const Chat = ({users, user}) =>{
                                         />
                                     )
                                 })
+                            :   <div className="coldPage"><h2>Choice the chat</h2></div>
+                           
+                            
                         }
                     </div>
                     <SendMessagePanel

@@ -15,38 +15,47 @@ export const ChatCreator = (
         children
     }) =>{
 
-    const
-    [
-        chat,
-        createDefaultChat,
-        getCurrentChat,
-        createChat,
-        addMessage,
-        loading
-    ] = useFirebaseChats()
-
     const [val, setVal] = useState('')
     const inp = useRef()
     const [viewList, setViewList] = useState(false)
+    const [editing, setEditing] = useState(false)
+    const [viewButton, setViewButton] = useState(false)
 
     const filtredValues = useMemo(() => {
         return value.filter(elem => elem.name.includes(val))
     }, [value, val])
 
     useEffect(() => {
-        if(filtredValues.length === 0 && val !== ''){
-            setViewList(false)
-        } else{
-            setViewList(true)
+        if(editing === true){
+            if(filtredValues.length === 0 && val !== ''){
+                setViewList(false)
+            } else{
+                setViewList(true)
+            }
         }
-    }, [filtredValues])
+      
+    }, [filtredValues, editing])
+
+    useEffect(() => {
+        if(
+            filtredValues.length === 1 &&
+            String(val) === String(filtredValues[0].name) ||
+            val === ''){
+            
+            setViewButton(false)
+        }
+    }, [filtredValues, val])
 
     useEffect(() => {
         setViewList(false)
     }, [])
     
     const closeListHandler = {
-        wait: ()=> setTimeout(() => setViewList(false) , 100)
+        wait: ()=> setTimeout(() => {
+            setViewList(false)
+            setViewButton(false)
+            setEditing(false)
+        } , 100)
     }
 
     useEffect(() => {
@@ -55,13 +64,9 @@ export const ChatCreator = (
         }
     }, [viewList])
     
-     
     function getValueInField(val){
         action(val)
     }
-
-
-  
 
     return(
         <div className={styled.ChatCreator}>
@@ -70,11 +75,19 @@ export const ChatCreator = (
                     placeholder="Search chat"
                     type="text"
                     value={val}
-                    onChange={(e) => setVal(e.target.value)}
-                    onFocus={() => {setViewList(true)}}
+                    onChange={(e) =>
+                    {
+                        setVal(e.target.value)
+                        setViewButton(true)
+                    }}
+                    onFocus={() =>
+                    {
+                        setEditing(true)
+                        setViewList(true)
+                    }}
                     onBlur={() => {closeListHandler.wait()}}
                     />
-                <FunctionButton
+                {/* <FunctionButton
                         action={()=>{
                             action(val)
                             setVal('')
@@ -84,26 +97,46 @@ export const ChatCreator = (
                         title={iconTitle}
                         disabled={value === ''? true : false}>
                         {children}
-                </FunctionButton>
+                </FunctionButton> */}
             </div>
-            <div
-                className={styled.ChatCreator__List}
-                style=
-                {
-                    viewList === true
-                    ? {display: 'block'}
-                    : {display: 'none'}
-                }>
-                <ValueList
-                    value={filtredValues}
-                    action=
+            <div className={styled.ChatCreator__List}>
+                <div
+                    style=
                     {
-                        val =>
+                        viewList === true
+                        ? {display: 'block'}
+                        : {display: 'none'}
+                    }>
+                    <ValueList
+                        value={filtredValues}
+                        action=
                         {
-                            getValueInField(val)
+                            val =>
+                            {
+                                getValueInField(val)
+                            }
                         }
-                    }
                     />
+                </div>
+                <div
+                    className={styled.ChatCreator__List__Button}
+                    style=
+                    {
+                        viewButton === true
+                        ? {display: 'block'}
+                        : {display: 'none'}
+                    }>
+                        <button
+                            className="Button primary">
+                                Create&nbsp;
+                                <span
+                                    className={styled.ChatCreator__List__Button__ChatName}>
+                                     {`"${val}"`} 
+                                </span>
+                                &nbsp;chat
+                        </button>
+                </div>
+                
             </div>
         </div>
     )

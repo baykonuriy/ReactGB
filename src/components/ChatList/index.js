@@ -1,5 +1,5 @@
-import React, {useEffect, useMemo} from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect} from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from './ChatList.module.scss';
 import { useSelector, useDispatch, connect } from "react-redux";
 import { useFirebaseChats } from "../../hooks/useFirebaseChats";
@@ -28,36 +28,40 @@ const ChatList = ({user, users}) => {
         updateUserChatList,
         fireUsersLoading
     ] = useFarebaseUsers()
-
+    const id = Object.values(useParams())
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const goBack = () => navigate(-1)
     const goFirstChat = () => navigate(`default_${user.id}`)
     const firstMessage = 'Write something to your interlocutor and he will receive this message'
+    const recipientFirstMessage = `User ${user.id} added you to the chat list`
 
     useEffect(() => {
-        goFirstChat()
-    }, [])
+        if(id[0] === '')
+            goFirstChat()
+    }, [id])
 
-    const availableChats = useMemo(() => {
-        console.log('fireUsersLoading', fireUsersLoading)
-        if(fireUsersLoading){
-            return getChatList(users)
-        } else{
-            return getChatList(fireUsers[0])
-        }
-       
-    }, [users])
 
     return(
         <div className={styled.chatList}>
             <div className={styled.chatList__addChat}>
                 <ChatCreator
-                    value={availableChats}
+                    value=
+                    {
+                        fireUsersLoading
+                            ? getChatList(users)
+                            : getChatList(fireUsers[0])
+                    }
                     iconTitle="Add new chat"
                     type="field"
-                    action={recipient => createChat(recipient, user, firstMessage, 'Robot')}
-                    >
+                    action={recipient => 
+                        createChat(
+                            recipient,
+                            user,
+                            firstMessage,
+                            recipientFirstMessage,
+                            'Robot')}
+                >
                     <Icon
                         name="add"
                         size={24}>
@@ -65,23 +69,22 @@ const ChatList = ({user, users}) => {
                 </ChatCreator>
             </div>
             {
-                fireUsersLoading ?
-                <p>Loading...</p>
-                : Object.values(fireUsers[0][user.id].chats)
-                    .map(chat => {
-                        return (
-                            <ChatListItem
-                                chat={chat}
-                                key={chat.id}
-                                // action={(chat) => {
-                                //     goBack()
-                                //     elementActionHandler('chats', chat, 'remove')
-                                // }}
-
-                                clickHandler={id => getCurrentChat(id)}
-                                />
-                        )
-                })
+                fireUsersLoading
+                    ? <p>Loading...</p>
+                    : Object.values(fireUsers[0][user.id].chats)
+                        .map(chat => {
+                            return (
+                                <ChatListItem
+                                    chat={chat}
+                                    key={chat.id}
+                                    // action={(chat) => {
+                                    //     goBack()
+                                    //     elementActionHandler('chats', chat, 'remove')
+                                    // }}
+                                    clickHandler={id => getCurrentChat(id)}
+                                    />
+                            )
+                    })
             }
         </div>
     )

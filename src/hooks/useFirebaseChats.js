@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux";
 import { addCurrentUserAction } from "../store/chats";
 import { updateUsers } from "../asyncActions/users";
-import {useCollectionData} from 'react-firebase-hooks/firestore'
+import {useCollectionData} from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from "../context";
 import moment from "moment";
 
@@ -23,7 +23,7 @@ export const useFirebaseChats = () => {
             .doc(String(id))
             .set(
                 {
-                    chat_id: `default_chat_${sender}`,
+                    chat_id: `default_${sender}`,
                     id: String(id),
                     date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
                     text: message,
@@ -33,7 +33,12 @@ export const useFirebaseChats = () => {
     }
 
     function getCurrentChat(chatName){
-        setCurrentChat(chatName)
+        if(chatName === ''){
+            setCurrentChat(`default_${user.id}`)
+        } else{
+            setCurrentChat(chatName)
+        }
+        
     }
 
     function updateUserChatList(updatedUsers, updatedUser){
@@ -49,7 +54,7 @@ export const useFirebaseChats = () => {
             }
     }
 
-    function createChat(recipient, sender, message, signature, spaсe){
+    function createChat(recipient, sender, senderMessage, recipientMessage, signature){
         const docId = Date.now()
         const updatedAllUsers = {...users}
         const updatedUser = {...sender}
@@ -70,8 +75,8 @@ export const useFirebaseChats = () => {
                     chat_id: recipient.id + '_' + sender.id,
                     id: String(docId),
                     date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
-                    text: message,
-                    user: sender.id
+                    text: senderMessage,
+                    user: signature
                 }
             )
         firestore
@@ -82,17 +87,16 @@ export const useFirebaseChats = () => {
                     chat_id: sender.id + '_' + recipient.id,
                     id: String(docId),
                     date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
-                    text: message,
-                    user: sender.id
+                    text: recipientMessage,
+                    user: signature
                 }
             )
     }
 
-    // function createPublicChat(chatName){
-        
-    //     firestore
-    //     .collection(chatName)
-    // }
+    function createPublicChat(chatName){
+        firestore
+        .collection(chatName)
+    }
 
     function addMessage(recipient, sender, message){
         if(recipient === 'default'){

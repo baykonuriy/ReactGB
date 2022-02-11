@@ -23,7 +23,6 @@ export const AppChat = () => {
                 <Chat
                   id={id[0]}/>
               }/>
-          
        </Routes>
     </div>
   );
