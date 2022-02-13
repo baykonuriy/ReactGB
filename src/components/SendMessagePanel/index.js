@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React from "react";
 import { InputText } from "..";
 import styled from './SendMessPanel.module.scss'
 

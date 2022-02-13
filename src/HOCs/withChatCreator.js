@@ -1,4 +1,4 @@
-import {useState, useMemo, useEffect,} from 'react'
+import {useState, useMemo, useEffect} from 'react'
 
 export const withChatCreator = (Component) => {
        
@@ -7,11 +7,11 @@ export const withChatCreator = (Component) => {
             const [viewList, setViewList] = useState(false)
             const [editing, setEditing] = useState(false)
             const [viewButton, setViewButton] = useState(false)
-        
+
             const filtredValues = useMemo(() => {
                 return value.filter(elem => elem.name.includes(val))
             }, [value, val])
-        
+
             useEffect(() => {
                 if(editing === true){
                     if(filtredValues.length === 0 && val !== ''){
@@ -20,7 +20,6 @@ export const withChatCreator = (Component) => {
                         setViewList(true)
                     }
                 }
-              
             }, [filtredValues, editing])
         
             useEffect(() => {

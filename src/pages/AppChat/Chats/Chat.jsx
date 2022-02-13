@@ -44,19 +44,6 @@ const Chat = ({users, user}) =>{
                         className="page"
                         ref={messagePage}>
                         {   
-                            // loading
-                            // ?   <div className="coldPage"><h2>Loading...</h2></div>
-                            // :   chat.map(mess => {
-                            //         return(
-                            //             <Message
-                            //                 key={mess.id}
-                            //                 message={mess}
-                            //                 // removeMessage={mess=> {
-                            //                 //     elementActionHandler('messages', mess, 'remove')
-                            //                 // }}
-                            //             />
-                            //         )
-                            //     })
                             loading
                             ?   <div className="coldPage"><h2>Loading...</h2></div>
                             :   chat
