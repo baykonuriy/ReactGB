@@ -5,7 +5,7 @@ export const ValueList = (props) => {
     const {value} = props
     const {action} = props
 
-    function sendItemValue(itemValue){
+    function sendItemValue(itemValue, e){
         action(itemValue)
     }
 
@@ -15,7 +15,7 @@ export const ValueList = (props) => {
                 value.map(item=>{
                     return(
                         <li
-                            onClick={()=>{sendItemValue(item)}}
+                            onClick={(e)=>sendItemValue(item, e)}
                             key={item.id}
                             className={styled.ValueList__item}>
                             <p>{item.name}</p>

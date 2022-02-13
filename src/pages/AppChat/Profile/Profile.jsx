@@ -2,7 +2,6 @@ import React from "react";
 import styled from './Profile.module.scss'
 import { CheckBox } from "../../../components"; 
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 
 
 export const Profile = () => {

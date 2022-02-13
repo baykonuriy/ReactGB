@@ -1,62 +1,98 @@
-import React, { useState } from "react"
-import 
-    {
-        List,
-        ListItem,
-        ListItemText,
-        ListItemAvatar,
-        Avatar,
-        Typography
-    }
-from '@mui/material'
-import { useLocation, NavLink } from 'react-router-dom'
-import myStyled from './ChatList.module.scss'
+import React, {useEffect} from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import styled from './ChatList.module.scss';
+import { useSelector, useDispatch, connect } from "react-redux";
+import { useFirebaseChats } from "../../hooks/useFirebaseChats";
+import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
+import { ChatListItem, ChatCreator, Icon } from "..";
 
-export const ChatList = ({chats}) => {
-    const history = useLocation()
-    const typeChats = useState('material')
+const ChatList = ({user, users}) => {
+    const
+    [
+        chat,
+        createDefaultChat,
+        getCurrentChat,
+        createChat,
+        addMessage
+    ] = useFirebaseChats()
 
-    console.log('history', history)
+    const
+    [
+        showAlert,
+        fireUsers,
+        usersOnline,
+        registrationUser,
+        autorization,
+        exit,
+        getChatList,
+        updateUserChatList,
+        fireUsersLoading
+    ] = useFarebaseUsers()
+    const id = Object.values(useParams())
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const goBack = () => navigate(-1)
+    const goFirstChat = () => navigate(`default_${user.id}`)
+    const firstMessage = 'Write something to your interlocutor and he will receive this message'
+    const recipientFirstMessage = `User ${user.id} added you to the chat list`
+
+    useEffect(() => {
+        if(id[0] === '')
+            goFirstChat()
+    }, [id])
+
 
     return(
-        <List
-            sx={{width: '260px'}}>
-            {   
-                chats
-                ?   chats.map(chat=>{
-                        return (
-                            <ListItem
-                                alignItems="flex-start"
-                                key={chat.id}>
-                                    <ListItemAvatar>
-                                        <Avatar alt={chat.chatName} src={chat.userpic}/>
-                                    </ListItemAvatar>
-                                    {/* <ListItemText
-                                        primary={chat.chatName}
-                                        secondary={
-                                            <React.Fragment>
-                                                <Typography
-                                                    sx={{ display: 'inline' }}
-                                                    component="span"
-                                                    variant="body2"
-                                                    color="text.primary"
-                                                >
-                                                    {chat.status}
-                                            </Typography>
-                                            </React.Fragment>}>
-                                    </ListItemText> */}
-                                    <div className={myStyled.chatList__textWrapper}>
-                                        <p>{chat.chatName}</p>
-                                        <span className="description">{chat.status}</span>
-                                    </div>
-                                    
-                            </ListItem>
-                        )
+        <div className={styled.chatList}>
+            <div className={styled.chatList__addChat}>
+                <ChatCreator
+                    value=
+                    {
+                        fireUsersLoading
+                            ? getChatList(users)
+                            : getChatList(fireUsers[0])
+                    }
+                    iconTitle="Add new chat"
+                    type="field"
+                    action={recipient => 
+                        createChat(
+                            recipient,
+                            user,
+                            firstMessage,
+                            recipientFirstMessage,
+                            'Robot')}
+                >
+                    <Icon
+                        name="add"
+                        size={24}>
+                    </Icon>
+                </ChatCreator>
+            </div>
+            {
+                fireUsersLoading
+                    ? <p>Loading...</p>
+                    : Object.values(fireUsers[0][user.id].chats)
+                        .map(chat => {
+                            return (
+                                <ChatListItem
+                                    chat={chat}
+                                    key={chat.id}
+                                    // action={(chat) => {
+                                    //     goBack()
+                                    //     elementActionHandler('chats', chat, 'remove')
+                                    // }}
+                                    clickHandler={id => getCurrentChat(id)}
+                                    />
+                            )
                     })
-                :   null
-                
             }
-        </List>
+        </div>
     )
-    
 }
+
+const mapStateToProps = state => ({
+    user: state.chats.user,
+    users: state.chats.users
+})
+
+export default connect(mapStateToProps)(ChatList)

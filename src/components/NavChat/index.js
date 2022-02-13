@@ -1,9 +1,25 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addCurrentUserAction, getUsersAction } from "../../store/chatsReducer";
 import styled from './NavChat.module.scss'
+import { AuthContext } from "../../context";
+import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
 
 export const NavChat = () =>{
     const activeLink = ({isActive})=> isActive? styled.activeLink : ''
+    const {isAuth, setIsAuth} = useContext(AuthContext)
+    const navigate = useNavigate()
+    
+    const
+    [
+        showAlert,
+        _,
+        __,
+        ___,
+        _____,
+        exit
+    ] = useFarebaseUsers()
 
     return(
         <div className={styled.NavChat}>
@@ -11,9 +27,22 @@ export const NavChat = () =>{
                 <li
                     className={styled.NavChat__list__item}
                     title="Main Page">
+                    <div
+                        className={styled.NavChat__list__item__exit}
+                        onClick={exit}
+                        title="Sign out">
+                    <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fillRule="evenodd" clipRule="evenodd" d="M6 2.5H13V1H6C4.34315 1 3 2.34315 3 4V16C3 17.6569 4.34315 19 6 19H13V17.5H6C5.17157 17.5 4.5 16.8284 4.5 16V4C4.5 3.17157 5.17157 2.5 6 2.5ZM12.1125 13.1836L13.1716 14.2426L14.2322 13.182L16.7071 10.7071C17.0976 10.3166 17.0976 9.68342 16.7071 9.29289L14.2322 6.81802L13.1716 5.75736L12.1125 6.81641L14.5461 9.25L7 9.25V10.75L14.5461 10.75L12.1125 13.1836Z" fill="#101828"/>
+                    </svg>
+
+                    </div>
+                </li>
+                <li
+                    className={styled.NavChat__list__item}
+                    title="Main Page">
                     <NavLink to="/" className={activeLink}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M19.9548 10.4387L17.516 11.3466V18.0005C17.516 18.829 16.8445 19.5005 16.016 19.5005H15V14C15 12.8954 14.1046 12 13 12H11C9.89543 12 9 12.8954 9 14V19.5005H7.99273C7.16431 19.5005 6.49273 18.829 6.49273 18.0005V11.3456L4.04584 10.4372L12.0021 4.61948L19.9548 10.4387ZM21.3481 11.5205L19.016 12.3887V18.0005C19.016 19.6574 17.6729 21.0005 16.016 21.0005H7.99273C6.33588 21.0005 4.99273 19.6574 4.99273 18.0005V12.3887L2.65219 11.5198C1.90514 11.2425 1.76672 10.2455 2.40997 9.77514L11.412 3.19278C11.7636 2.93567 12.2412 2.93575 12.5927 3.19298L21.5897 9.77631C22.2324 10.2465 22.0944 11.2427 21.3481 11.5205ZM11 13.5H13C13.2761 13.5 13.5 13.7239 13.5 14V19.5H10.5V14C10.5 13.7239 10.7239 13.5 11 13.5Z" fill="black"/>
+                            <path fillRule="evenodd" clipRule="evenodd" d="M19.9548 10.4387L17.516 11.3466V18.0005C17.516 18.829 16.8445 19.5005 16.016 19.5005H15V14C15 12.8954 14.1046 12 13 12H11C9.89543 12 9 12.8954 9 14V19.5005H7.99273C7.16431 19.5005 6.49273 18.829 6.49273 18.0005V11.3456L4.04584 10.4372L12.0021 4.61948L19.9548 10.4387ZM21.3481 11.5205L19.016 12.3887V18.0005C19.016 19.6574 17.6729 21.0005 16.016 21.0005H7.99273C6.33588 21.0005 4.99273 19.6574 4.99273 18.0005V12.3887L2.65219 11.5198C1.90514 11.2425 1.76672 10.2455 2.40997 9.77514L11.412 3.19278C11.7636 2.93567 12.2412 2.93575 12.5927 3.19298L21.5897 9.77631C22.2324 10.2465 22.0944 11.2427 21.3481 11.5205ZM11 13.5H13C13.2761 13.5 13.5 13.7239 13.5 14V19.5H10.5V14C10.5 13.7239 10.7239 13.5 11 13.5Z" fill="#101828"/>
                         </svg>
                     </NavLink>
                 </li>

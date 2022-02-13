@@ -6,6 +6,10 @@
   height: 100vh;
   &__list {
     &__item {
+      &__exit {
+        padding: 20px;
+        cursor: pointer;
+      }
       & a {
         padding: 20px;
         display: block;

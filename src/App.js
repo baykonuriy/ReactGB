@@ -1,26 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes, NavLink, Outlet, Navigate} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { addCurrentUserAction, getUsersAction } from './store/chats';
+import { BrowserRouter } from 'react-router-dom';
+import { AppRouter } from './components';
 import './App.scss';
-import { LayOutChat } from './pages/AppChat/Layout';
-import { AppChat } from './pages/AppChat/AppChat';
-import { Profile } from './pages/AppChat/Profile/Profile';
-import { Main } from './pages/AppChat/Main/Main'
+import { AuthContext } from './context'
+import { fetchingUsers } from './asyncActions/users'
 
 function App() {
-  const dispath = useDispatch()
-  const profile = useSelector(state => state.profile)
+  const [isAuth, setIsAuth] = useState(false)
+  const dispatch = useDispatch()
+  const users = useSelector(state => state.chats.users)
+
+  useEffect(() =>{
+    // console.log('users main', users)
+  }, [users])
+  
+  useEffect(() => {
+    dispatch(fetchingUsers())
+    if(localStorage.getItem('auth')){
+      setIsAuth(true)
+    }
+    if(localStorage.getItem('user')){
+      const curr_user = JSON.parse(localStorage.getItem('user'))
+      dispatch(addCurrentUserAction(curr_user))
+    }
+    if(localStorage.getItem('users')){
+      const AllUsers = JSON.parse(localStorage.getItem('users'))
+      // console.log('AllUsers', AllUsers)
+      dispatch(getUsersAction(AllUsers))
+    }
+  }, [])
+
+
 
   return(
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LayOutChat/>}>
-          <Route index element={<Main/>}/>
-          <Route path="profile" element={<Profile/>}/>
-          <Route path="chats/*" element={<AppChat/>}/>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthContext.Provider value={{
+      isAuth,
+      setIsAuth
+    }}>
+      <BrowserRouter>
+        <AppRouter/>
+      </BrowserRouter>
+    </AuthContext.Provider>
+    
     
   )
 }
