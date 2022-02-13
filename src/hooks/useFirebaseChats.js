@@ -92,10 +92,23 @@ export const useFirebaseChats = () => {
                 }
             )
     }
-
-    function createPublicChat(chatName){
+    
+    function createPublicChat(chatName, message, creator, users){
+        const id = Date.now()
         firestore
         .collection(chatName)
+        .doc(String(id))
+        .set(
+            {
+                chat_id: chatName,
+                id: String(id),
+                date: moment().format('MMMM Do YYYY, hh:mm:ss a'),
+                text: message,
+                user: creator,
+                users: [...users]
+            }
+        )
+        
     }
 
     function addMessage(recipient, sender, message){

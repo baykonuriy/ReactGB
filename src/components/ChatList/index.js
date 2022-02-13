@@ -5,6 +5,7 @@ import { useSelector, useDispatch, connect } from "react-redux";
 import { useFirebaseChats } from "../../hooks/useFirebaseChats";
 import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
 import { ChatListItem, ChatCreator, Icon } from "..";
+import ChatCreator1 from "../ChatCreator1";
 
 const ChatList = ({user, users}) => {
     const
@@ -44,8 +45,10 @@ const ChatList = ({user, users}) => {
 
     return(
         <div className={styled.chatList}>
+            
             <div className={styled.chatList__addChat}>
-                <ChatCreator
+                
+                {/* <ChatCreator
                     value=
                     {
                         fireUsersLoading
@@ -66,7 +69,22 @@ const ChatList = ({user, users}) => {
                         name="add"
                         size={24}>
                     </Icon>
-                </ChatCreator>
+                </ChatCreator> */}
+                <ChatCreator1
+                value=
+                {
+                    fireUsersLoading
+                        ? getChatList(users)
+                        : getChatList(fireUsers[0])
+                }
+                action={recipient => 
+                    createChat(
+                        recipient,
+                        user,
+                        firstMessage,
+                        recipientFirstMessage,
+                        'Robot')}
+                />
             </div>
             {
                 fireUsersLoading

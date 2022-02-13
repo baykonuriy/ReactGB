@@ -10,7 +10,6 @@ export const NavChat = () =>{
     const activeLink = ({isActive})=> isActive? styled.activeLink : ''
     const {isAuth, setIsAuth} = useContext(AuthContext)
     const navigate = useNavigate()
-    
     const
     [
         showAlert,
