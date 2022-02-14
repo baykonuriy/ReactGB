@@ -1,23 +1,35 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useMemo } from "react";
 
 export const withSendMessagePanel = (Component) => {
 
-    return({action}) => {
+    return(props) => {
         const [value, setValue] = useState('')
         const inp = useRef()
-        // const sendValue = useCallback((e) =>
-        // { 
-        //     if(e.code === 'Enter'){
-        //         action(value)
-        //         setValue('')}
-        // })
+        
+        function sendValueInButtonClick(){
+            props.action(value)
+            setValue('')
+            inp.current.focus()
+        }
+        
+        const disabledButton = useMemo(() => {
+            return value === ''? true : false
+        })
+
         const sendValue = e =>
         { 
             if(e.code === 'Enter')
             {
-                action(value)
+                props.action(value)
                 setValue('')
             }
+        }
+
+        function changeValueInInput(e){
+            setValue(e.target.value)
+        }
+        function preventClick(e){
+            e.stopPropagation()
         }
         
         return (
@@ -25,6 +37,11 @@ export const withSendMessagePanel = (Component) => {
                 ref={inp}
                 value={value}
                 sendValue={sendValue}
+                changeValueInInput={changeValueInInput}
+                preventClick={preventClick}
+                disabledButton={disabledButton}
+                sendValueInButtonClick={sendValueInButtonClick}
+                {...props}
                 />) 
        
     }

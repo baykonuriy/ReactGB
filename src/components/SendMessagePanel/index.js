@@ -1,5 +1,6 @@
 import React from "react";
-import { InputText } from "..";
+// import { InputText } from "..";
+import InputText from "../InputText";
 import styled from './SendMessPanel.module.scss'
 
 export const SendMessagePanel = ({sendMessage}) =>{
