@@ -5,13 +5,14 @@ import App from './App';
 // import reportWebVitals from './reportWebVitals';
 // import { createStore } from 'redux'
 import {Provider} from 'react-redux';
-import {store} from './store';
+import { store, persistor } from './store';
 import { FirebaseContext } from './context';
 // import firebase from 'firebase';
 // import 'firebase/firestore';
 
 import firebase from "firebase/compat/app"
 import "firebase/compat/firestore"
+import { PersistGate } from 'redux-persist/integration/react'
 
 firebase.initializeApp(
   {
@@ -32,7 +33,9 @@ ReactDOM.render(
     firestore
   }}>
     <Provider store={store}>
-      <App/> 
+      <PersistGate loading={null} persistor={persistor}>
+        <App/> 
+      </PersistGate>
     </Provider>
   </FirebaseContext.Provider>,
   document.getElementById('root')

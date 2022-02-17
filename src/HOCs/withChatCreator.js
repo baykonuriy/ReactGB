@@ -7,9 +7,14 @@ export const withChatCreator = (Component) => {
             const [viewList, setViewList] = useState(false)
             const [editing, setEditing] = useState(false)
             const [viewButton, setViewButton] = useState(false)
-        
             const filtredValues = useMemo(() => {
-                return value.filter(elem => elem.name.includes(val))
+                if(val !== ''){
+                    return value.filter(elem => elem.name.includes(val))
+                } else{
+                    return value
+                }
+               
+                
             }, [value, val])
         
             useEffect(() => {
@@ -20,7 +25,6 @@ export const withChatCreator = (Component) => {
                         setViewList(true)
                     }
                 }
-              
             }, [filtredValues, editing])
         
             useEffect(() => {

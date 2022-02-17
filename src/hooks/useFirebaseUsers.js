@@ -3,7 +3,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import { FirebaseContext, AuthContext } from "../context";
-import { addCurrentUserAction, getUsersAction } from "../store/chats";
+import { addCurrentUserAction, addUserAction } from "../store/chats";
 import { addUser, updateUsers, fetchingUsers } from "../asyncActions/users";
 import { useFirebaseChats } from "./useFirebaseChats";
 
@@ -122,7 +122,7 @@ export const useFarebaseUsers = () => {
             localStorage.setItem('user', JSON.stringify(user))
             localStorage.setItem('users', JSON.stringify(users))
             dispatch(addCurrentUserAction(user))
-            dispatch(getUsersAction(users))
+            dispatch(addUserAction(users))
             console.log('auth users', users)
         } else{
             setShowAlert(true)
@@ -134,7 +134,7 @@ export const useFarebaseUsers = () => {
         localStorage.removeItem('user')
         localStorage.removeItem('users')
         dispatch(addCurrentUserAction({}))
-        dispatch(getUsersAction({}))
+        dispatch(addUserAction({}))
         setIsAuth(false)
         goToAuth()
         setShowAlert(true)

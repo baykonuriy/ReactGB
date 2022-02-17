@@ -1,24 +1,38 @@
-import React, { useContext } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addCurrentUserAction, getUsersAction } from "../../store/chatsReducer";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import
+{
+    getUser,
+    getUsers,
+    setAuthAction,
+    addCurrentUserAction,
+    addUserAction
+} from "../../store/chats";
+import { connect } from "react-redux";
 import styled from './NavChat.module.scss'
-import { AuthContext } from "../../context";
-import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
+import { useNavChat } from "../../hooks/useNavChat";
 
-export const NavChat = () =>{
-    const activeLink = ({isActive})=> isActive? styled.activeLink : ''
-    const {isAuth, setIsAuth} = useContext(AuthContext)
-    const navigate = useNavigate()
-    const
-    [
-        showAlert,
-        _,
-        __,
-        ___,
-        _____,
-        exit
-    ] = useFarebaseUsers()
+
+const NavChat = (
+    {
+        user,
+        users,
+        setAuth,
+        setCurrentUser,
+        returnUserToList
+    }) =>{
+    const [
+        exit,
+        activeLink
+    ] = useNavChat(
+        {
+            user,
+            users,
+            styled,
+            setAuth,
+            setCurrentUser,
+            returnUserToList
+        })
 
     return(
         <div className={styled.NavChat}>
@@ -67,3 +81,17 @@ export const NavChat = () =>{
         </div>
     )
 }
+
+
+const mapStateToProps = state => ({
+    user: getUser(state),
+    users: getUsers(state)
+})
+
+const mapDispatchToProps = {
+    setAuth: setAuthAction,
+    setCurrentUser: addCurrentUserAction,
+    returnUserToList: addUserAction
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavChat)

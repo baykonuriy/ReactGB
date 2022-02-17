@@ -2,37 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCurrentUserAction, getUsersAction } from './store/chats';
 import { BrowserRouter } from 'react-router-dom';
-import { AppRouter } from './components';
+
 import './App.scss';
 import { AuthContext } from './context'
 import { fetchingUsers } from './asyncActions/users'
+import AppRouter from './components/AppRouter/index';
 
 function App() {
   const [isAuth, setIsAuth] = useState(false)
   const dispatch = useDispatch()
   const users = useSelector(state => state.chats.users)
+  const user = useSelector(state => state.chats.user)
+  const chats = useSelector(state => state.chats)
 
   useEffect(() =>{
-    // console.log('users main', users)
-  }, [users])
-  
-  useEffect(() => {
-    dispatch(fetchingUsers())
-    if(localStorage.getItem('auth')){
-      setIsAuth(true)
-    }
-    if(localStorage.getItem('user')){
-      const curr_user = JSON.parse(localStorage.getItem('user'))
-      dispatch(addCurrentUserAction(curr_user))
-    }
-    if(localStorage.getItem('users')){
-      const AllUsers = JSON.parse(localStorage.getItem('users'))
-      // console.log('AllUsers', AllUsers)
-      dispatch(getUsersAction(AllUsers))
-    }
-  }, [])
-
-
+     console.log('chats main', chats)
+  }, [chats])
 
   return(
     <AuthContext.Provider value={{
