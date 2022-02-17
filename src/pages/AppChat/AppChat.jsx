@@ -7,9 +7,6 @@ import Chat from './Chats/Chat';
 
 export const AppChat = () => {
   const id = Object.values(useParams())
-  useEffect(() => {
-    console.log('id', id)
-  }, [id])
 
   return (
     <div className={styled.AppChat}>

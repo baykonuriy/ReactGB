@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { connect } from 'react-redux';
-
 
 export const withChatList = (Component) =>{
     return (props) => {
@@ -50,6 +48,7 @@ export const withChatList = (Component) =>{
         }, [])
 
         useEffect(() => {
+            props.addCurrentChat(`default_${props.user.id}`)
             goToDefaultChat()
         }, [])
 

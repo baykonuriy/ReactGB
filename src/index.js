@@ -2,14 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
-// import reportWebVitals from './reportWebVitals';
-// import { createStore } from 'redux'
 import {Provider} from 'react-redux';
 import { store, persistor } from './store';
 import { FirebaseContext } from './context';
-// import firebase from 'firebase';
-// import 'firebase/firestore';
-
 import firebase from "firebase/compat/app"
 import "firebase/compat/firestore"
 import { PersistGate } from 'redux-persist/integration/react'
@@ -40,4 +35,4 @@ ReactDOM.render(
   </FirebaseContext.Provider>,
   document.getElementById('root')
 );
-// reportWebVitals();
+

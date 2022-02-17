@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import { Message } from "../../../components/Message";
 import { SendMessagePanel } from "../../../components";
 import classed from "./AppChat.module.scss"
-import { useFirebaseChats } from "../../../hooks/useFirebaseChats";
-import { useParams, useNavigate } from 'react-router-dom';
 
 import { withChats } from "../../../HOCs/withChats";
 
@@ -22,7 +20,6 @@ const Chat = (
         messages,
         currentChat,
         setMessages,
-
         addMessage
     }) =>{
     const messagePage = useRef()
@@ -42,7 +39,10 @@ const Chat = (
                         className="page"
                         ref={messagePage}>
                         {   
-                            Object.values(messages).length > 0?
+                            Object
+                            .values(messages)
+                            .filter(elem => elem.chat_id === currentChat)
+                            .length > 0?
                             Object
                             .values(messages)
                             .filter(elem => elem.chat_id === currentChat)

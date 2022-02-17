@@ -2,7 +2,7 @@ import React from "react";
 import styled from './ChatList.module.scss';
 import { connect } from "react-redux";
 import { ChatListItem } from "..";
-import ChatCreator1 from "../ChatCreator1";
+import ChatCreator from "../ChatCreator";
 import { withChatList } from "../../HOCs/withChatList";
 
 import
@@ -27,9 +27,8 @@ import
 
     return(
         <div className={styled.chatList}>
-            
             <div className={styled.chatList__addChat}>
-                <ChatCreator1
+                <ChatCreator
                     value={
                         Object
                         .keys(users)
