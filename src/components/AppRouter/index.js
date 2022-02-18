@@ -1,18 +1,17 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Route, Routes } from "react-router-dom"
-import { AuthContext } from "../../context"
-import {LayOutChat } from "../../pages/AppChat/Layout"
-import { Main } from "../../pages/AppChat/Main/Main"
-import { Profile } from "../../pages/AppChat/Profile/Profile"
+import {LayOutChat } from "../../pages/Layout"
+import { Main } from "../../pages/Main/Main"
+import { Profile } from "../../pages/Profile/Profile"
 import { AppChat } from "../../pages/AppChat/AppChat"
 import Auth from '../Auth/index'
+import { connect } from "react-redux"
+import { getAuth } from "../../store/chats/selectors"
 import Registration from "../Registration/index"
-import { Temporary } from "../../pages/AppChat/Temporary"
 
-export const AppRouter = () =>{
-    const {isAuth, setIsAuth} = useContext(AuthContext)
+const AppRouter = ({auth}) =>{
     return(
-        isAuth
+        auth === true
         ?   <Routes>
                 <Route path="/" element={<LayOutChat/>}>
                     <Route index element={<Main/>}/>
@@ -25,7 +24,12 @@ export const AppRouter = () =>{
                 <Route path="/auth" element={<Auth/>}/>
                 <Route path="/reg" element={<Registration/>}/>
                 <Route path="*" element={<Auth/>}/>
-                <Route path="/about" element={<Temporary/>}/>
             </Routes>
     )
 }
+
+const mapStateToProps = state => ({
+   auth: getAuth(state)
+})
+
+export default connect(mapStateToProps)(AppRouter)

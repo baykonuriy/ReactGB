@@ -2,16 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "./Registration.module.scss"
 import { Alert } from "..";
-import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
+import { withRegistration } from "../../HOCs/withRegistration";
+import { connect } from "react-redux";
+import { getUsers } from "../../store/chats/selectors";
+import { addUserAction } from "../../store/chats";
 
-const Registration = () => {
-    const
-    [
-        showAlert,
-        _,
-        __,
-        registrationUser
-    ] = useFarebaseUsers()
+export const Registration = (
+    {
+        users,
+        addUser,
+        registrationUser,
+        showAlert
+    }) => {
 
     return(
         <div className={styled.Registration}>
@@ -85,4 +87,12 @@ const Registration = () => {
     )
 }
 
-export default Registration
+const mapStateToProps = state => ({
+    users: getUsers(state)
+})
+
+const mapDispatchToProps = {
+    addUser: addUserAction
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRegistration(Registration))

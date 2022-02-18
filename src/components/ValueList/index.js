@@ -4,7 +4,6 @@ import styled from './ValueList.module.scss'
 export const ValueList = (props) => {
     const {value} = props
     const {action} = props
-
     function sendItemValue(itemValue, e){
         action(itemValue)
     }

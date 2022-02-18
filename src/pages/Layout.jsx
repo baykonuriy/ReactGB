@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import styled from './Layout.module.scss'
-import { NavChat } from "../../components";
+import NavChat from "../components/NavChat/index";
 
 const LayOutChat = () => {
     const navigate = useNavigate()
@@ -10,6 +10,7 @@ const LayOutChat = () => {
     useEffect(() => {
         goToMain()
     }, [])
+
     return(
         <div className={styled.Layout}>
             <NavChat></NavChat>

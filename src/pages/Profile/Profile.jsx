@@ -1,6 +1,6 @@
 import React from "react";
 import styled from './Profile.module.scss'
-import { CheckBox } from "../../../components"; 
+import { CheckBox } from "../../components"; 
 import { useDispatch, useSelector } from "react-redux";
 
 

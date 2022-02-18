@@ -1,19 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "./Auth.module.scss";
-import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
-
+import { connect } from "react-redux";
+import { addCurrentUserAction, setAuthAction } from "../../store/chats";
+import { getUsers } from "../../store/chats/selectors";
+import { withAuth } from "../../HOCs/withAuth";
 import { Alert } from "..";
 
-const Auth = () => {
-    const
-    [
-        showAlert,
-        _,
-        __,
-        ___,
-        autorization
-    ] = useFarebaseUsers()
+export const Auth = (
+    {
+        users,
+        addUser,
+        setAuth,
+        autorization,
+        showAlert
+    }) => {
     
     return(
         <div 
@@ -21,7 +22,7 @@ const Auth = () => {
             >
             <h2>Autorization</h2>
             <form
-                onSubmit={autorization}
+                onSubmit={(e) => autorization(e)}
                 className={styled.Auth__form}>
                 <label
                     className={styled.Auth__form__field}
@@ -72,9 +73,13 @@ const Auth = () => {
     )
 }
 
-// const mapStateToProps = state => ({
-//     users: state.chats.users
-// })
+const mapStateToProps = state => ({
+    users: getUsers(state),
+})
 
-export default Auth
-//connect(mapStateToProps)(Auth)
+const mapDispatchToProps = {
+    addUser: addCurrentUserAction,
+    setAuth: setAuthAction
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withAuth(Auth))

@@ -12,24 +12,15 @@ export const ChatListItem = ({chat, action, clickHandler}) => {
             onMouseOver={()=> setHover(true)}
             onMouseOut={()=> setHover(false)}
             onClick={() => clickHandler(chat.id)}
-            to={
-                chat.id.split('_')[0] === 'default'?
-                chat.id :
-                chat.id + '_' + user.id
-            }
+            to={chat? chat.id : '/chats'}
             className={({isActive})=> isActive? styled.ChatListItem + ' ' + styled.active : styled.ChatListItem}
             key={chat.id}>
             <div className={styled.ChatListItem__textWrapper}>
                 <p>{chat.login}</p>
                 <span className="description">
-                    {
-                        chat.online
-                        ? 'Online'
-                        : 'Offline'
-                    }
+                    Online
                 </span>
             </div>
-
             <div
                 className={styled.ChatListItem__actions}
                 style=

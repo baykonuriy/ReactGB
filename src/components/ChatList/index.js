@@ -1,98 +1,75 @@
-import React, {useEffect} from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React from "react";
 import styled from './ChatList.module.scss';
-import { useSelector, useDispatch, connect } from "react-redux";
-import { useFirebaseChats } from "../../hooks/useFirebaseChats";
-import { useFarebaseUsers } from "../../hooks/useFirebaseUsers";
-import { ChatListItem, ChatCreator, Icon } from "..";
+import { connect } from "react-redux";
+import { ChatListItem } from "..";
+import ChatCreator from "../ChatCreator";
+import { withChatList } from "../../HOCs/withChatList";
 
-const ChatList = ({user, users}) => {
-    const
-    [
-        chat,
-        createDefaultChat,
-        getCurrentChat,
-        createChat,
-        addMessage
-    ] = useFirebaseChats()
+import
+{ 
+    getUser,
+    getUsers,
+    addCurrentChatAction,
+    addUserAction,
+    addCurrentUserAction
+} from "../../store/chats";
 
-    const
-    [
-        showAlert,
-        fireUsers,
-        usersOnline,
-        registrationUser,
-        autorization,
-        exit,
-        getChatList,
-        updateUserChatList,
-        fireUsersLoading
-    ] = useFarebaseUsers()
-    const id = Object.values(useParams())
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const goBack = () => navigate(-1)
-    const goFirstChat = () => navigate(`default_${user.id}`)
-    const firstMessage = 'Write something to your interlocutor and he will receive this message'
-    const recipientFirstMessage = `User ${user.id} added you to the chat list`
-
-    useEffect(() => {
-        if(id[0] === '')
-            goFirstChat()
-    }, [id])
-
+    const ChatList = (
+    {
+        user,
+        users,
+        addCurrentChat,
+        setUsers,
+        setCurrentUser,
+        removeThisChat,
+        addChat
+    }) => {
 
     return(
         <div className={styled.chatList}>
             <div className={styled.chatList__addChat}>
                 <ChatCreator
-                    value=
-                    {
-                        fireUsersLoading
-                            ? getChatList(users)
-                            : getChatList(fireUsers[0])
-                    }
-                    iconTitle="Add new chat"
-                    type="field"
-                    action={recipient => 
-                        createChat(
-                            recipient,
-                            user,
-                            firstMessage,
-                            recipientFirstMessage,
-                            'Robot')}
-                >
-                    <Icon
-                        name="add"
-                        size={24}>
-                    </Icon>
-                </ChatCreator>
+                    value={
+                        Object
+                        .keys(users)
+                        .filter(chat_name => chat_name !== user.id)
+                        .map(elem => {
+                        return {name: elem, id: elem}
+                            
+                    })}
+                    action={addChat}
+                />
             </div>
             {
-                fireUsersLoading
-                    ? <p>Loading...</p>
-                    : Object.values(fireUsers[0][user.id].chats)
+                Object.values(user.chats).length > 0
+                ?   Object.values(user.chats)
                         .map(chat => {
                             return (
                                 <ChatListItem
                                     chat={chat}
                                     key={chat.id}
-                                    // action={(chat) => {
-                                    //     goBack()
-                                    //     elementActionHandler('chats', chat, 'remove')
-                                    // }}
-                                    clickHandler={id => getCurrentChat(id)}
-                                    />
+                                    action={(chat) => {removeThisChat(chat)}}
+                                    clickHandler={chat => addCurrentChat(chat)}
+                                />
                             )
                     })
+                :   <div className="coldPage">
+                        <p>Not chats</p>
+                    </div>
             }
         </div>
     )
 }
 
 const mapStateToProps = state => ({
-    user: state.chats.user,
-    users: state.chats.users
+    user: getUser(state),
+    users: getUsers(state),
 })
 
-export default connect(mapStateToProps)(ChatList)
+const mapDispatchToProps = {
+    addCurrentChat: addCurrentChatAction,
+    setUsers: addUserAction,
+    setCurrentUser: addCurrentUserAction 
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withChatList(ChatList))
