@@ -9,3 +9,4 @@ export const addCurrentUserAction = (payload) => ({type: ADD_CURRENT_USER, paylo
 export const setAuthAction = (payload) => ({type: SET_AUTH, payload})
 export const addCurrentChatAction = (payload) => ({type: ADD_CURRENT_CHAT, payload})
 export const setMessagesAction = (payload) => ({type: SET_MESSAGES, payload})
+

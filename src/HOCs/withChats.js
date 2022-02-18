@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { botResponse } from "../MiddlewaresThunk/messages";
+import React, { useState } from "react";
+import { sendMessageMiddleWare } from "../MiddlewaresThunk/messages";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 
@@ -13,7 +13,7 @@ export const withChats = (Component) => {
         const dispatch = useDispatch()
         const [lastText, setLastText] = useState('')
 
-        function addMessage(text, currentUser){
+        function addMessage(text){
             const message = {
                 chat_id: currentChat,
                 id: Date.now(),
@@ -22,25 +22,8 @@ export const withChats = (Component) => {
                 user: user.id
             }
             setLastText(text)
-            setMessages(message)
+            dispatch(sendMessageMiddleWare(text, currentChat, user.id))
         }
-
-        const botMessage = {
-            wait: () => 
-                setTimeout(() => {
-                    dispatch(botResponse(lastText, currentChat))
-                }, 500)
-        }
-
-        useEffect(() => {
-            if( Object.values(messages).length > 0 &&
-                Object.values(messages)[Object.values(messages).length - 1].user !== 'Bot')
-                botMessage.wait()
-            return () => {
-                clearTimeout(botMessage.wait)
-            }
-        }, [messages])
-
         return (
             <Component
                 user={user}
