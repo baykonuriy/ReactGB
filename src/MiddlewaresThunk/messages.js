@@ -1,6 +1,7 @@
 import moment from "moment"
 import { setMessagesAction } from "../store/chats"
 
+
 export const sendMessageMiddleWare = (text, currentChat, sender) => {
     const message = {
         chat_id: currentChat,
@@ -22,6 +23,6 @@ export const sendMessageMiddleWare = (text, currentChat, sender) => {
             clearTimeout(jj)
         }
     }
-   
 }
+
 

@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { profileReducer } from './profileReduser'
 import { chatsReduser1 } from './chats'
+import { gistsReducer } from './gist';
 import {composeWithDevTools} from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import createSagaMiddleware from 'redux-saga'
@@ -24,7 +25,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     profile: profileReducer,
-    chats: chatsReduser1
+    chats: chatsReduser1,
+    gists: gistsReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
