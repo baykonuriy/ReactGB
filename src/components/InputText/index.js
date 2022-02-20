@@ -22,8 +22,6 @@ export const InputText = (props) =>{
     }
 
     if(type === 'select'){
-
-      
         function sendValue(e){
 
         }

@@ -8,6 +8,8 @@ import Auth from '../Auth/index'
 import { connect } from "react-redux"
 import { getAuth } from "../../store/chats/selectors"
 import Registration from "../Registration/index"
+import { GistsPage } from "../../pages/Gists/GistsPage"
+import { GistPageEndReducer } from "../../pages/Gists/GistsPage"
 
 const AppRouter = ({auth}) =>{
     return(
@@ -17,7 +19,8 @@ const AppRouter = ({auth}) =>{
                     <Route index element={<Main/>}/>
                     <Route path="profile" element={<Profile/>}/>
                     <Route path="chats/*" element={<AppChat/>}/>
-                    <Route path="*" element={<Main/>}/>
+                    <Route path="/gists" element={<GistPageEndReducer/>}/>
+                    {/* <Route path="*" element={<Main/>}/> */}
                 </Route>
             </Routes>
         :   <Routes>
