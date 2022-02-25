@@ -15,7 +15,7 @@ export const withRegistration = (Component) => {
         const [email, setEmail] = useState('')
         const [password, setPassword] = useState('')
         const [showAlert, setShowAlert] = useState(false)
-        const db = getDatabase()
+        
 
         const addingValuesInStates = (inputName, value) => {
             switch(inputName){
@@ -37,89 +37,52 @@ export const withRegistration = (Component) => {
                 try{
                     await createUserWithEmailAndPassword(auth, email, password)
                     createUser()
-                    goToAuth()
                 } catch(err){
                     setShowAlert(true)
                 }
+                goToAuth()
+                
             }
         }
 
-        const createUser = () => {
+        const createUser = async () => {
             const nameArr = name.split(' ')
+            const regexp = /([^\s]+)@([^\s\.]+)/gm
+            const id = email.match(regexp)[0]
             const newUser =
             {
                 first_name: nameArr[1]? nameArr[1] : null,
                 last_name: nameArr[0],
                 patronim: nameArr[2]? nameArr[2] : null,
-                nickname: name,
-                login: email,
+                nickname: id,
+                login: id,
                 pass: password,
                 online: false,
                 chats:{
-                    [`default_${email}`]:
+                    [`default_${id}`]:
                     {
-                        login: `default_${email}`,
+                        login: `default_${id}`,
                         online: false,
-                        id: `default_${email}`,
+                        id: `default_${id}`,
                         removable: false
                     }
                 },
-                id: email,
+                id: id,
                 removable: true
             }
-            // usersRef.set({...usersRef, ...newUser})
+            try{
+                const db =  getDatabase()
+                await set(ref(db, 'users/' + id), newUser)
+            } catch(err){
+                console.log('err', err)
+            }
             
-            set(ref, (db, 'root'), {us: 'hhh'})
             
         }
 
-        //  const registrationUser  = async (e) => {
-        //     e.preventDefault()
-        //     setEmail(e.target.login.value)
-        //     setPassword(e.target.user_pass.value)
-        //         try{
-        //             await createUserWithEmailAndPassword(auth, email, password)
-        //             goToAuth()
-        //         } catch(err){
-        //             setError(err)
-        //             setShowAlert(true)
-        //         }
-        //     // if(!users.hasOwnProperty(e.target.login.value)){
-        //     //     const nameArr = e.target.user_name.value.split(' ')
-        //     //     const newUser =
-        //     //     {
-        //     //         [e.target.login.value]:
-        //     //         {
-        //     //             first_name: nameArr[1]? nameArr[1] : null,
-        //     //             last_name: nameArr[0],
-        //     //             patronim: nameArr[2]? nameArr[2] : null,
-        //     //             nickname: e.target.login.value,
-        //     //             login: e.target.login.value,
-        //     //             pass: e.target.user_pass.value,
-        //     //             online: false,
-        //     //             chats:{
-        //     //                 [`default_${e.target.login.value}`]:
-        //     //                 {
-        //     //                     login: `default_${e.target.login.value}`,
-        //     //                     online: false,
-        //     //                     id: `default_${e.target.login.value}`,
-        //     //                     removable: false
-        //     //                 }
-        //     //             },
-        //     //             id: e.target.login.value,
-        //     //             removable: true
-        //     //         }
-        //     //     }
-        //     //     const updatedUsers = {...users, ...newUser}
-        //     //     addUser(updatedUsers)
-        //     //     goToAuth()
-        //     //     setShowAlert(false)
-        //     // } else{
-        //     //     setShowAlert(true)
-        //     // }
-        // }
         return (
             <Component
+                createUser={createUser}
                 addingValuesInStates={addingValuesInStates}
                 showAlert={showAlert}
                 registrationUser={registrationUser}

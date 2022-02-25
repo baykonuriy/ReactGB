@@ -16,6 +16,7 @@ export const Registration = (
         registrationUser,
         showAlert,
         addingValuesInStates,
+        createUser,
         addPass,
         addLogin
     }) => {
@@ -102,6 +103,7 @@ export const Registration = (
             </form>
             <div className={styled.Registration__link}>
                 <Link to="/auth">Autorization</Link>
+                <p onClick={createUser}>click</p>
             </div>
         </div>
     )
