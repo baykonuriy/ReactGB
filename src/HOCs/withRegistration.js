@@ -15,7 +15,6 @@ export const withRegistration = (Component) => {
         const [email, setEmail] = useState('')
         const [password, setPassword] = useState('')
         const [showAlert, setShowAlert] = useState(false)
-        
 
         const addingValuesInStates = (inputName, value) => {
             switch(inputName){

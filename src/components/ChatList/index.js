@@ -3,16 +3,17 @@ import styled from './ChatList.module.scss';
 import { connect } from "react-redux";
 import { ChatListItem } from "..";
 import ChatCreator from "../ChatCreator";
+import { withChatList1 } from "../../HOCs/withChatList1";
 import { withChatList } from "../../HOCs/withChatList";
 
-import
-{ 
-    getUser,
-    getUsers,
-    addCurrentChatAction,
-    addUserAction,
-    addCurrentUserAction
-} from "../../store/chats";
+// import
+// { 
+//     getUser,
+//     getUsers,
+//     addCurrentChatAction,
+//     addUserAction,
+//     addCurrentUserAction
+// } from "../../store/chats";
 
     const ChatList = (
     {
@@ -28,17 +29,22 @@ import
     return(
         <div className={styled.chatList}>
             <div className={styled.chatList__addChat}>
-                <ChatCreator
-                    value={
-                        Object
-                        .keys(users)
-                        .filter(chat_name => chat_name !== user.id)
-                        .map(elem => {
-                        return {name: elem, id: elem}
-                            
-                    })}
-                    action={addChat}
-                />
+               {
+                   users
+                   ?    <ChatCreator
+                            value={
+                                Object
+                                .keys(users)
+                                .filter(chat_name => chat_name !== user.id)
+                                .map(elem => {
+                                return {name: elem, id: elem}
+                                    
+                            })}
+                            action={addChat}
+                        />
+                    :   <p>Loading...</p>
+
+               }
             </div>
             {
                 Object.values(user.chats).length > 0
@@ -61,15 +67,16 @@ import
     )
 }
 
-const mapStateToProps = state => ({
-    user: getUser(state),
-    users: getUsers(state),
-})
+// const mapStateToProps = state => ({
+//     user: getUser(state),
+//     // users: getUsers(state),
+// })
 
-const mapDispatchToProps = {
-    addCurrentChat: addCurrentChatAction,
-    setUsers: addUserAction,
-    setCurrentUser: addCurrentUserAction 
-}
+// const mapDispatchToProps = {
+//     addCurrentChat: addCurrentChatAction,
+//     // setUsers: addUserAction,
+//     setCurrentUser: addCurrentUserAction 
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withChatList(ChatList))
+// export default connect(mapStateToProps, mapDispatchToProps)(withChatList1(ChatList))
+export default withChatList1(ChatList)

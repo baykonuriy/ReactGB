@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { getDatabase, ref, onValue } from 'firebase/database'
 
 export const withAuth = (Component) => {
 
@@ -8,6 +9,7 @@ export const withAuth = (Component) => {
         const [email, setEmail] = useState('')
         const [pass, setPass] = useState('')
         const auth = getAuth()
+        const db = getDatabase()
 
         const addLogin = (login) => {
             setEmail(login)
@@ -25,7 +27,7 @@ export const withAuth = (Component) => {
                     const regexp = /([^\s]+)@([^\s\.]+)/gm
                     const id = email.match(regexp)[0]
                     await signInWithEmailAndPassword(auth, email, pass)
-                    addUser(id)
+                    dispatchingCurrentUser(id)
                     setAuth(true)
                 } catch(err){
                     setShowAlert(true)
@@ -42,6 +44,14 @@ export const withAuth = (Component) => {
             //     setShowAlert(true)
             //     setAuth(false)
             // }
+        }
+        const dispatchingCurrentUser = (user_id) => {
+            const currentUser = ref(db, 'users/' + user_id)
+                onValue(currentUser, (snapshot) => {
+                    const data = snapshot.val()
+                    addUser(data)
+                })
+            
         }
         return(
             <Component

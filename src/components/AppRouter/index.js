@@ -20,7 +20,7 @@ const AppRouter = ({auth}) =>{
                     <Route path="profile" element={<Profile/>}/>
                     <Route path="chats/*" element={<AppChat/>}/>
                     <Route path="/gists" element={<GistPageEndReducer/>}/>
-                    {/* <Route path="*" element={<Main/>}/> */}
+                    <Route path="*" element={<Main/>}/>
                 </Route>
             </Routes>
         :   <Routes>
