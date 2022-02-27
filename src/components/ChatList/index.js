@@ -4,24 +4,13 @@ import { connect } from "react-redux";
 import { ChatListItem } from "..";
 import ChatCreator from "../ChatCreator";
 import { withChatList1 } from "../../HOCs/withChatList1";
-import { withChatList } from "../../HOCs/withChatList";
 
-// import
-// { 
-//     getUser,
-//     getUsers,
-//     addCurrentChatAction,
-//     addUserAction,
-//     addCurrentUserAction
-// } from "../../store/chats";
 
     const ChatList = (
     {
         user,
         users,
         addCurrentChat,
-        setUsers,
-        setCurrentUser,
         removeThisChat,
         addChat
     }) => {
@@ -46,7 +35,8 @@ import { withChatList } from "../../HOCs/withChatList";
 
                }
             </div>
-            {
+            {   
+                
                 Object.values(user.chats).length > 0
                 ?   Object.values(user.chats)
                         .map(chat => {
@@ -67,16 +57,4 @@ import { withChatList } from "../../HOCs/withChatList";
     )
 }
 
-// const mapStateToProps = state => ({
-//     user: getUser(state),
-//     // users: getUsers(state),
-// })
-
-// const mapDispatchToProps = {
-//     addCurrentChat: addCurrentChatAction,
-//     // setUsers: addUserAction,
-//     setCurrentUser: addCurrentUserAction 
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(withChatList1(ChatList))
 export default withChatList1(ChatList)

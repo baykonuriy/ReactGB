@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { getDatabase, ref, onValue, set } from 'firebase/database'
-import { addCurrentUserAction } from '../store/chats'
+import { addCurrentUserAction, addCurrentChatAction } from '../store/chats'
 
 export const withChatList1 = (Component) =>{
     return () => {
@@ -11,6 +11,16 @@ export const withChatList1 = (Component) =>{
         const db = getDatabase()
         const refFirebaseUsers = ref(db, 'users')
         const [firebseUsers, setFirebseUsers] = useState()
+
+        function updatingObjectList(list, filterVal){
+            return  Object
+                    .values(list)
+                    .filter(elem => elem.id !== filterVal)
+                    .reduce((acc, curr) => {
+                        acc[curr.id] = curr
+                        return acc
+                    }, {})
+        }
 
         const getFirebaseUsers = useCallback(() => {
             return onValue((refFirebaseUsers), (snapshot) => {
@@ -42,7 +52,7 @@ export const withChatList1 = (Component) =>{
             dispatch(addCurrentUserAction(updateUser))
             updateCurrentUserInBase(user.id, updateUser)
         }
-
+        
         async function updateCurrentUserInBase(user_id, update_user){
             try{
                 await set(ref(db, 'users/' + user_id), update_user)
@@ -51,38 +61,34 @@ export const withChatList1 = (Component) =>{
             }
         }
 
-        const removingThisChat = {
-            wait:
-                (updatedCurrentUser) => 
-                    setTimeout(() => {
-                        goToBack()
-                        dispatch(addCurrentUserAction(updatedCurrentUser))
-                        updateCurrentUserInBase(user.id, updatedCurrentUser)
-                    }, 100)
+        function removeThisChat(chat){
+            const updatedChatsCurrentUser = updatingObjectList(user.chats, chat.id)
+            const updatedCurrentUser = {...user, chats: {...updatedChatsCurrentUser}}
+            dispatch(addCurrentUserAction(updatedCurrentUser))
+            updateCurrentUserInBase(user.id, updatedCurrentUser)
+            goToBack()
         }
 
-        function removeThisChat(chat){
-            
-            // const updatedUsers = {[chat.id]: chat, ...props.users}
-            // const updatedChatsCurrentUser = updatingObjectList(props.user.chats, chat.id)
-            // const updatedCurrentUser = {...props.user, chats: {...updatedChatsCurrentUser}}
-            // removingThisChat.wait(updatedUsers, updatedCurrentUser)
+        function addCurrentChat(chat){
+            dispatch(addCurrentChatAction(chat))
         }
 
         useEffect(()=>{
             return () => {
                 updateCurrentUserInBase()
+                
             }
         }, [])
 
-        // useEffect(() => {
-        //     props.addCurrentChat(`default_${props.user.id}`)
-        //     goToDefaultChat()
-        // }, [])
+        useEffect(() => {
+            dispatch(addCurrentChatAction(`default_${user.id}`))
+            goToDefaultChat()
+        }, [])
 
         return (
             <Component
                 user={user}
+                addCurrentChat={addCurrentChat}
                 users={firebseUsers}
                 removeThisChat={removeThisChat}
                 addChat={addChat}

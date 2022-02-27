@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Message } from "../../../components/Message";
 import { SendMessagePanel } from "../../../components";
 import classed from "./AppChat.module.scss"
-
 import { withChats } from "../../../HOCs/withChats";
 
 import

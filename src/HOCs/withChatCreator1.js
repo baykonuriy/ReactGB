@@ -1,32 +1,9 @@
 import {useState, useMemo, useEffect, useCallback} from 'react'
-import { getDatabase, ref, onValue } from 'firebase/database'
 
 export const withChatCreator = (Component) => {
        
         return({value, action}) => {
-            const db = getDatabase()
-            const refFirebaseUsers = ref(db, 'users')
-            const [firebseUsers, setFirebseUsers] = useState()
-
-            const getFirebaseUsers = useCallback(() => {
-                 return onValue((refFirebaseUsers), (snapshot) => {
-                    setFirebseUsers(snapshot.val())
-                }, {
-                    onlyOnce: false
-                })
-            }, [])
-
-            useEffect(() => {
-                getFirebaseUsers()
-                return () =>{
-                    getFirebaseUsers()
-                }
-            }, [])
-
-            useEffect(() => {
-                console.log('firebseUsers', firebseUsers)
-            }, [firebseUsers])
-
+          
             const [val, setVal] = useState('')
             const [viewList, setViewList] = useState(false)
             const [editing, setEditing] = useState(false)
