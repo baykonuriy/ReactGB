@@ -13,7 +13,9 @@ export const Auth = (
         addUser,
         setAuth,
         autorization,
-        showAlert
+        showAlert,
+        addLogin,
+        addPass
     }) => {
     
     return(
@@ -34,7 +36,8 @@ export const Auth = (
                     <input
                         name="login"
                         id="login"
-                        type="text"/>
+                        type="text"
+                        onInput={e => addLogin(e.target.value)}/>
                 </label>
                 <label
                     className={styled.Auth__form__field}
@@ -46,7 +49,9 @@ export const Auth = (
                     <input
                         name="user_pass"
                         id="user_pass"
-                        type="text"/>
+                        type="password"
+                        className="InputText"
+                        onInput={e => addPass(e.target.value)}/>
                 </label>
                 <div style={
                         showAlert === true

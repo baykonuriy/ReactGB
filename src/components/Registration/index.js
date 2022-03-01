@@ -6,20 +6,28 @@ import { withRegistration } from "../../HOCs/withRegistration";
 import { connect } from "react-redux";
 import { getUsers } from "../../store/chats/selectors";
 import { addUserAction } from "../../store/chats";
+//-------
+
 
 export const Registration = (
     {
         users,
         addUser,
         registrationUser,
-        showAlert
+        showAlert,
+        addingValuesInStates,
+        createUser,
+        addPass,
+        addLogin
     }) => {
 
     return(
         <div className={styled.Registration}>
             <h2>Registration</h2>
             <form
-                onSubmit={(e) => registrationUser(e)}
+                onSubmit={(e) => {
+                    registrationUser(e)
+                }}
                 id="reg"
                 className={styled.Registration__form}>
                 <label
@@ -33,7 +41,11 @@ export const Registration = (
                         name="user_name"
                         id="user_name"
                         type="text"
-                        placeholder="Last name, First name, Patronim"/>
+                        placeholder="Last name, First name, Patronim"
+                        onInput={e => {
+                            addingValuesInStates('name', e.target.value)
+                        }}
+                        />
                     <span className="description">Use space to separate words</span>
                 </label>
                 <label
@@ -47,7 +59,11 @@ export const Registration = (
                         name="login"
                         id="login"
                         type="text"
-                        placeholder="example@domain.com"/>
+                        placeholder="example@domain.com"
+                        onInput={e => {
+                            addingValuesInStates('login', e.target.value)
+                        }}
+                        />
                     <div style={
                         showAlert === true
                         ? {display: "block", marginTop: 8}
@@ -68,8 +84,13 @@ export const Registration = (
                     <input
                         name="user_pass"
                         id="user_pass"
-                        type="text"
-                        placeholder="*****"/>
+                        type="password"
+                        className="InputText"
+                        placeholder="*****"
+                        onInput={e => {
+                            addingValuesInStates('pass', e.target.value)
+                        }}
+                    />
                 </label>
                 <button
                     style={{marginRight: 8}}

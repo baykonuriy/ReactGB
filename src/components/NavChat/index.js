@@ -13,7 +13,6 @@ import styled from './NavChat.module.scss'
 import { useNavChat } from "../../hooks/useNavChat";
 import { Icon } from "..";
 
-
 const NavChat = (
     {
         user,

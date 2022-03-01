@@ -74,7 +74,8 @@ h3 {
   color: rgba(16, 24, 40, 0.5);
 }
 
-input[type="text"] {
+input[type="text"],
+.InputText {
   font-size: 14px;
   line-height: 20px;
   color: #101828;

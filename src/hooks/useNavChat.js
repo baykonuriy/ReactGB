@@ -16,9 +16,9 @@ export const useNavChat = (
     
     function exit(){
         setAuth(false)
-        const updateUsers = {...users, ...user.chats}
-        updateUsers[user.id].chats = {...user.chats}
-        returnUserToList(updateUsers)
+        // const updateUsers = {...users, ...user.chats}
+        // updateUsers[user.id].chats = {...user.chats}
+        // returnUserToList(updateUsers)
         setCurrentUser({})
         goToAuth()
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { withChatCreator } from "../../HOCs/withChatCreator";
+import { withChatCreator } from "../../HOCs/withChatCreator1";
 import styled from "./ChatCreator.module.scss"
 import
 { 

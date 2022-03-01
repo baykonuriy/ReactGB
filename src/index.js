@@ -5,27 +5,21 @@ import App from './App';
 import {Provider} from 'react-redux';
 import { store, persistor } from './store';
 import { FirebaseContext } from './context';
-import firebase from "firebase/compat/app"
-import "firebase/compat/firestore"
 import { PersistGate } from 'redux-persist/integration/react'
-
-firebase.initializeApp(
-  {
-    apiKey: "AIzaSyDiXFxAbBcSvY0InKzAhyBKn9_tIMrZBMU",
-    authDomain: "chat-9873752748903.firebaseapp.com",
-    projectId: "chat-9873752748903",
-    storageBucket: "chat-9873752748903.appspot.com",
-    messagingSenderId: "819835967150",
-    appId: "1:819835967150:web:1452b616f2f96c3dd13f3f"
-  }
-);
-
-const firestore = firebase.firestore()
+import
+{ 
+  firestore,
+  db,
+  firebaseApp,
+  firebaseAuth
+} from './services/firebase'
 
 ReactDOM.render(
   <FirebaseContext.Provider value={{
-    firebase,
-    firestore
+    firebaseApp,
+    firestore,
+    firebaseAuth,
+    db
   }}>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

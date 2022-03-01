@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { sendMessageMiddleWare } from "../MiddlewaresThunk/messages";
 import { useDispatch } from "react-redux";
+import { getDatabase, ref, set } from 'firebase/database'
 import moment from "moment";
 
 export const withChats = (Component) => {
